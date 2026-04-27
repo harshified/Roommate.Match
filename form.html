@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fill Your Profile · RoomieMATCH</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --plum:#1E0030;--purple:#4A1070;--lavender:#B57BEE;--soft-lav:#D4AAFF;
+  --blush:#FF8FAB;--pink:#FF4D8D;--rose:#FF1F71;--cream:#FFF5F9;
+  --glass:rgba(255,255,255,0.08);--glass-b:rgba(255,255,255,0.18);
+  --glow-pink:0 8px 32px rgba(255,77,141,0.35);--glow-lav:0 8px 32px rgba(181,123,238,0.3);
+  --ff-head:'Playfair Display',Georgia,serif;
+  --ff-body:'DM Sans',system-ui,sans-serif;
+  --ff-script:'Dancing Script',cursive;
+}
+body{font-family:var(--ff-body);background:var(--plum);color:#fff;min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--plum)}::-webkit-scrollbar-thumb{background:var(--lavender);border-radius:3px}
+body::before{content:'';position:fixed;inset:0;z-index:-1;background:radial-gradient(ellipse 70% 60% at 10% 0%,rgba(255,77,141,0.18) 0%,transparent 55%),radial-gradient(ellipse 60% 70% at 92% 15%,rgba(181,123,238,0.22) 0%,transparent 55%),radial-gradient(ellipse 80% 50% at 50% 110%,rgba(74,16,112,0.5) 0%,transparent 60%),var(--plum)}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:200;height:66px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(30,0,48,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-b)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--pink),var(--lavender));display:grid;place-items:center;font-size:17px;box-shadow:var(--glow-pink)}
+.logo-text{font-family:var(--ff-script);font-size:1.45rem;background:linear-gradient(90deg,var(--soft-lav),var(--blush));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.logo-sub{display:block;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--lavender);-webkit-text-fill-color:var(--lavender)}
+.nav-links{display:flex;gap:2px;list-style:none}
+.nav-links a{color:rgba(255,255,255,0.7);text-decoration:none;padding:7px 14px;border-radius:40px;font-size:0.84rem;font-weight:500;transition:all .22s;display:flex;align-items:center;gap:5px;border:1px solid transparent}
+.nav-links a:hover,.nav-links a.active{background:var(--glass);border-color:var(--glass-b);color:#fff}
+.nav-links a.active{background:linear-gradient(135deg,rgba(255,77,141,.25),rgba(181,123,238,.25));color:var(--blush)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:5px}
+.hamburger span{display:block;width:22px;height:2px;background:var(--soft-lav);border-radius:2px}
+@media(max-width:700px){.hamburger{display:flex}.nav-links{display:none;position:fixed;top:66px;left:0;right:0;background:rgba(20,0,35,.97);backdrop-filter:blur(20px);flex-direction:column;padding:1.25rem;border-bottom:1px solid var(--glass-b);gap:3px}.nav-links.open{display:flex}.nav-links a{border-radius:12px;padding:11px 14px}}
+
+/* PAGE HEADER */
+.page-header{text-align:center;padding:3rem 1.5rem 2rem}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,77,141,0.12);border:1px solid rgba(255,77,141,0.3);border-radius:50px;padding:7px 18px;font-size:0.78rem;font-weight:600;color:var(--blush);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1.2rem}
+.page-header h1{font-family:var(--ff-head);font-size:clamp(2rem,5vw,3.2rem);font-weight:900;line-height:1.08;margin-bottom:.8rem}
+.grad-text{font-style:italic;background:linear-gradient(100deg,var(--blush),var(--soft-lav));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.page-header p{font-size:.95rem;color:rgba(255,255,255,0.55);max-width:460px;margin:0 auto;line-height:1.7}
+
+/* STEP BAR */
+.step-bar{display:flex;align-items:flex-start;justify-content:center;gap:0;margin:0 auto 2.5rem;max-width:560px;padding:0 1rem}
+.step-item{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;position:relative}
+.step-item:not(:last-child)::after{content:'';position:absolute;top:17px;left:calc(50% + 18px);right:calc(-50% + 18px);height:2px;background:rgba(255,255,255,0.12)}
+.step-item.done:not(:last-child)::after{background:rgba(74,222,128,0.4)}
+.step-circle{width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,0.2);display:grid;place-items:center;font-size:.8rem;font-weight:700;background:var(--glass);z-index:1;transition:all .3s;flex-shrink:0}
+.step-item.active .step-circle{background:linear-gradient(135deg,var(--pink),var(--lavender));border-color:transparent;box-shadow:var(--glow-pink)}
+.step-item.done .step-circle{background:rgba(74,222,128,0.25);border-color:rgba(74,222,128,0.6);color:#86efac}
+.step-label{font-size:.68rem;color:rgba(255,255,255,0.4);white-space:nowrap;text-align:center}
+.step-item.active .step-label{color:var(--blush);font-weight:600}
+.step-item.done .step-label{color:rgba(74,222,128,0.8)}
+
+/* PROGRESS BAR */
+.prog-outer{height:5px;background:rgba(255,255,255,0.08);border-radius:3px;margin-bottom:2rem;overflow:hidden}
+.prog-inner{height:100%;background:linear-gradient(90deg,var(--pink),var(--lavender));border-radius:3px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+
+/* FORM CARD */
+.form-wrap{max-width:720px;margin:0 auto;padding:0 1.25rem 5rem}
+.form-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:26px;padding:2.5rem;backdrop-filter:blur(14px)}
+@media(max-width:600px){.form-card{padding:1.5rem 1.1rem}}
+
+/* SECTION TITLE */
+.sec-title{display:flex;align-items:center;gap:10px;font-family:var(--ff-head);font-size:1.1rem;font-weight:700;color:var(--soft-lav);margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid rgba(255,255,255,0.08)}
+.sec-title .sec-emoji{font-size:1.3rem}
+
+/* FORM ELEMENTS */
+.form-group{margin-bottom:1.4rem}
+.form-label{display:block;font-size:.82rem;font-weight:600;color:var(--soft-lav);margin-bottom:7px;letter-spacing:.3px}
+.req{color:var(--pink);margin-left:3px}
+.form-control{width:100%;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.13);border-radius:12px;padding:12px 15px;color:#fff;font-family:var(--ff-body);font-size:.88rem;transition:all .22s;outline:none;-webkit-appearance:none;appearance:none}
+.form-control::placeholder{color:rgba(255,255,255,0.3)}
+.form-control:focus{border-color:var(--lavender);background:rgba(255,255,255,0.1);box-shadow:0 0 0 3px rgba(181,123,238,0.15)}
+select.form-control{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23B57BEE' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+select.form-control option{background:#2a0042;color:#fff}
+textarea.form-control{resize:vertical;min-height:90px}
+
+/* GRID */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:560px){.form-row{grid-template-columns:1fr}}
+
+/* PILL SELECTORS */
+.pill-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:5px}
+.pill-item{display:inline-flex;align-items:center;cursor:pointer}
+.pill-item input{display:none}
+.pill-label{padding:8px 16px;border-radius:50px;border:1.5px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.05);font-size:.82rem;color:rgba(255,255,255,0.75);transition:all .2s;user-select:none;white-space:nowrap;font-family:var(--ff-body)}
+.pill-item input:checked+.pill-label{background:linear-gradient(135deg,rgba(255,77,141,0.35),rgba(181,123,238,0.35));border-color:var(--blush);color:#fff;font-weight:600}
+.pill-item .pill-label:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.3);color:#fff}
+
+/* RANGE SLIDER */
+.range-wrap{display:flex;align-items:center;gap:10px;margin-top:6px}
+.range-end{font-size:.75rem;color:rgba(255,255,255,0.4);flex-shrink:0;min-width:70px}
+.range-end.right{text-align:right}
+input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,0.15);outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--lavender));cursor:pointer;box-shadow:0 2px 8px rgba(255,77,141,.4)}
+.range-val{min-width:28px;text-align:center;font-size:.95rem;font-weight:700;color:var(--blush)}
+
+/* HINT */
+.field-hint{font-size:.74rem;margin-top:5px;transition:color .2s}
+.hint-ok{color:#4ade80}.hint-err{color:var(--rose)}
+
+/* INFO NOTE */
+.info-note{background:rgba(181,123,238,0.1);border:1px solid rgba(181,123,238,0.22);border-radius:12px;padding:.9rem 1.1rem;font-size:.82rem;color:rgba(255,255,255,0.65);margin-bottom:2rem;display:flex;gap:9px;align-items:flex-start;line-height:1.6}
+
+/* NAV BUTTONS */
+.form-nav{display:flex;justify-content:space-between;gap:1rem;margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.07)}
+
+/* SUCCESS */
+.success-view{display:none;text-align:center;padding:3.5rem 1.5rem}
+.success-view .s-emoji{font-size:4rem;display:block;animation:bounceIn .6s ease}
+@keyframes bounceIn{0%{transform:scale(0)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+.success-view h2{font-family:var(--ff-head);font-size:2rem;margin:1rem 0 .6rem}
+.success-view p{color:rgba(255,255,255,0.6);max-width:380px;margin:0 auto 2rem;line-height:1.7}
+
+/* STEP PAGES */
+.step-page{display:none}.step-page.active{display:block}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:13px 26px;border-radius:50px;font-family:var(--ff-body);font-weight:600;font-size:.9rem;cursor:pointer;border:none;text-decoration:none;transition:all .28s;white-space:nowrap}
+.btn-primary{background:linear-gradient(135deg,var(--pink),var(--rose));color:#fff;box-shadow:var(--glow-pink)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(255,31,113,.45)}
+.btn-outline{background:transparent;color:var(--soft-lav);border:1.5px solid var(--lavender)}
+.btn-outline:hover{background:var(--glass);color:#fff}
+.btn-full{width:100%;justify-content:center}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
+
+/* LOADER */
+.loader-overlay{position:fixed;inset:0;background:rgba(30,0,48,0.85);backdrop-filter:blur(10px);display:none;place-items:center;z-index:9998}
+.loader-overlay.show{display:grid}
+.loader-ring{width:52px;height:52px;border:4px solid rgba(255,255,255,0.1);border-top-color:var(--blush);border-right-color:var(--lavender);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* TOAST */
+.toast-box{position:fixed;bottom:22px;right:22px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{background:rgba(30,0,48,0.96);border:1px solid var(--glass-b);backdrop-filter:blur(18px);border-radius:14px;padding:13px 18px;min-width:260px;display:flex;align-items:center;gap:10px;animation:toastIn .35s ease;box-shadow:var(--glow-lav)}
+.toast.ok{border-left:4px solid #4ade80}.toast.err{border-left:4px solid var(--rose)}.toast.info{border-left:4px solid var(--lavender)}
+@keyframes toastIn{from{opacity:0;transform:translateX(36px)}to{opacity:1;transform:translateX(0)}}
+.toast-msg{font-size:.87rem;color:#fff}
+
+/* WATERMARK */
+.wm{position:fixed;bottom:10px;right:14px;color:transparent;font-size:.65rem;user-select:text;pointer-events:none;z-index:9999}
+
+/* CHECKBOX GRID */
+.check-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:5px}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="./index.html">
+    <div class="logo-icon">💜</div>
+    <div><span class="logo-text">RoomieMATCH</span><span class="logo-sub">MBA 2026–2028</span></div>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="./index.html">🏠 Home</a></li>
+    <li><a href="./form.html" class="active">📋 Join</a></li>
+    <li><a href="./matches.html">💞 Matches</a></li>
+    <li><a href="./updates.html">📢 Updates</a></li>
+    <li><a href="./admin.html">🔐 Admin</a></li>
+  </ul>
+  <button class="hamburger" id="ham"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="eyebrow">📋 Step-by-step</div>
+  <h1>Your <span class="grad-text">Roomie</span> Profile</h1>
+  <p>Fill this once, we do the rest. Takes about 8–10 minutes.</p>
+</div>
+
+<div class="form-wrap">
+
+  <!-- STEP INDICATOR -->
+  <div class="step-bar" id="stepBar">
+    <div class="step-item active" data-s="1"><div class="step-circle" id="sc1">1</div><span class="step-label">Personal</span></div>
+    <div class="step-item" data-s="2"><div class="step-circle" id="sc2">2</div><span class="step-label">Lifestyle</span></div>
+    <div class="step-item" data-s="3"><div class="step-circle" id="sc3">3</div><span class="step-label">Habits</span></div>
+    <div class="step-item" data-s="4"><div class="step-circle" id="sc4">4</div><span class="step-label">Flat Prefs</span></div>
+    <div class="step-item" data-s="5"><div class="step-circle" id="sc5">5</div><span class="step-label">Finish</span></div>
+  </div>
+
+  <div class="form-card">
+    <div class="prog-outer"><div class="prog-inner" id="prog" style="width:20%"></div></div>
+
+    <div class="info-note">ℹ️ Fields marked <span style="color:var(--pink);margin:0 2px">*</span> are required. Your contact is only shared with your consent.</div>
+
+    <form id="mainForm" novalidate>
+
+    <!-- ═══ STEP 1 ═══ -->
+    <div class="step-page active" id="step1">
+      <div class="sec-title"><span class="sec-emoji">👤</span> Personal Info</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Full Name <span class="req">*</span></label>
+          <input type="text" name="name" class="form-control" placeholder="Your full name" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Age <span class="req">*</span></label>
+          <input type="number" name="age" class="form-control" placeholder="23" min="18" max="45" required/>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Email Address <span class="req">*</span></label>
+          <input type="email" name="email" id="fEmail" class="form-control" placeholder="you@email.com" required/>
+          <p class="field-hint" id="hEmail"></p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number <span class="req">*</span></label>
+          <input type="tel" name="phone" id="fPhone" class="form-control" placeholder="10-digit mobile" required/>
+          <p class="field-hint" id="hPhone"></p>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Instagram</label>
+          <input type="url" name="instagram" class="form-control" placeholder="https://instagram.com/you"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">LinkedIn</label>
+          <input type="url" name="linkedin" class="form-control" placeholder="https://linkedin.com/in/you"/>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Gender <span class="req">*</span></label>
+          <select name="gender" class="form-control" required>
+            <option value="">Select gender</option>
+            <option>Female</option><option>Male</option><option>Prefer not to say</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Marital Status <span class="req">*</span></label>
+          <select name="marital" class="form-control" required>
+            <option value="">Select status</option>
+            <option>Single</option><option>In a relationship</option><option>Married</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Religion</label>
+          <select name="religion" class="form-control">
+            <option value="">Select</option>
+            <option>Hindu</option><option>Muslim</option><option>Christian</option><option>Sikh</option>
+            <option>Buddhist</option><option>Jain</option><option>Parsi</option><option>Prefer not to say</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Home State <span class="req">*</span></label>
+          <select name="state" class="form-control" required>
+            <option value="">Select state</option>
+            <option>Andhra Pradesh</option><option>Arunachal Pradesh</option><option>Assam</option><option>Bihar</option>
+            <option>Chhattisgarh</option><option>Goa</option><option>Gujarat</option><option>Haryana</option>
+            <option>Himachal Pradesh</option><option>Jharkhand</option><option>Karnataka</option><option>Kerala</option>
+            <option>Madhya Pradesh</option><option>Maharashtra</option><option>Manipur</option><option>Meghalaya</option>
+            <option>Mizoram</option><option>Nagaland</option><option>Odisha</option><option>Punjab</option>
+            <option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option><option>Telangana</option>
+            <option>Tripura</option><option>Uttar Pradesh</option><option>Uttarakhand</option><option>West Bengal</option>
+            <option>Delhi</option><option>Jammu & Kashmir</option><option>Ladakh</option><option>Puducherry</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">City / Location</label>
+          <input type="text" name="city" class="form-control" placeholder="e.g. Mumbai"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Distance from State Capital</label>
+          <select name="dist_capital" class="form-control">
+            <option value="">Select</option>
+            <option>Within 50km</option><option>Around 3 hrs away</option><option>More than that</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nearest Famous City Tier</label>
+        <select name="nearest_city" class="form-control">
+          <option value="">Select</option>
+          <option>Tier 1 (Mumbai, Delhi, Bangalore…)</option>
+          <option>Tier 1.5 (Pune, Hyderabad, Jaipur…)</option>
+          <option>Tier 2</option><option>Tier 3 or smaller</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 2 ═══ -->
+    <div class="step-page" id="step2">
+      <div class="sec-title"><span class="sec-emoji">🌙</span> Lifestyle & Habits</div>
+
+      <div class="form-group">
+        <label class="form-label">Sleep Schedule <span class="req">*</span></label>
+        <div class="pill-group">
+          <label class="pill-item"><input type="radio" name="sleep_schedule" value="Early Bird" required/><span class="pill-label">🌅 Early Bird</span></label>
+          <label class="pill-item"><input type="radio" name="sleep_schedule" value="Night Owl"/><span class="pill-label">🦉 Night Owl</span></label>
+          <label class="pill-item"><input type="radio" name="sleep_schedule" value="Flexible"/><span class="pill-label">🔄 Flexible</span></label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Usual Wake-up Time</label>
+          <select name="wakeup" class="form-control">
+            <option value="">Select</option>
+            <option>Before 6 AM</option><option>6–7 AM</option><option>7–8 AM</option><option>8–9 AM</option><option>After 9 AM</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Usual Sleep Time</label>
+          <select name="sleep_time" class="form-control">
+            <option value="">Select</option>
+            <option>Before 10 PM</option><option>10–11 PM</option><option>11 PM–12 AM</option><option>12–1 AM</option><option>After 1 AM</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Cleanliness Level I Maintain <span class="req">*</span></label>
+        <div class="range-wrap">
+          <span class="range-end">Very Chill</span>
+          <input type="range" name="cleanliness" min="1" max="5" value="3" class="rng"/>
+          <span class="range-val" id="rv_cleanliness">3</span>
+          <span class="range-end right">Very Neat</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Noise Tolerance <span class="req">*</span></label>
+        <div class="range-wrap">
+          <span class="range-end">Need Silence</span>
+          <input type="range" name="noise_tolerance" min="1" max="5" value="3" class="rng"/>
+          <span class="range-val" id="rv_noise_tolerance">3</span>
+          <span class="range-end right">OK w/ Noise</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Need Darkness/Silence to Sleep (1=Not at all, 5=Must have)</label>
+        <div class="range-wrap">
+          <span class="range-end">Not at all</span>
+          <input type="range" name="sleep_silence" min="1" max="5" value="3" class="rng"/>
+          <span class="range-val" id="rv_sleep_silence">3</span>
+          <span class="range-end right">Must have</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Food Preference <span class="req">*</span></label>
+        <div class="pill-group">
+          <label class="pill-item"><input type="radio" name="food" value="Vegetarian" required/><span class="pill-label">🥗 Vegetarian</span></label>
+          <label class="pill-item"><input type="radio" name="food" value="Non-vegetarian"/><span class="pill-label">🍗 Non-Veg</span></label>
+          <label class="pill-item"><input type="radio" name="food" value="Eggetarian"/><span class="pill-label">🥚 Eggetarian</span></label>
+          <label class="pill-item"><input type="radio" name="food" value="Jain"/><span class="pill-label">🪷 Jain</span></label>
+          <label class="pill-item"><input type="radio" name="food" value="Vegan"/><span class="pill-label">🌱 Vegan</span></label>
+          <label class="pill-item"><input type="radio" name="food" value="Flexible"/><span class="pill-label">🍽️ Flexible</span></label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Dietary Restrictions / Allergies</label>
+          <input type="text" name="dietary" class="form-control" placeholder="e.g. Nut allergy, Gluten-free"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Medications (for safety awareness)</label>
+          <input type="text" name="medications" class="form-control" placeholder="Optional"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Do you smoke? <span class="req">*</span></label>
+        <div class="pill-group">
+          <label class="pill-item"><input type="radio" name="smoking" value="Yes" required/><span class="pill-label">Yes 🚬</span></label>
+          <label class="pill-item"><input type="radio" name="smoking" value="Occasionally"/><span class="pill-label">Occasionally</span></label>
+          <label class="pill-item"><input type="radio" name="smoking" value="No"/><span class="pill-label">No ✅</span></label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Okay with smell of smoke/nashe? <span class="req">*</span></label>
+        <div class="pill-group">
+          <label class="pill-item"><input type="radio" name="nashe_okay" value="Yes" required/><span class="pill-label">Yes</span></label>
+          <label class="pill-item"><input type="radio" name="nashe_okay" value="Depends"/><span class="pill-label">Depends</span></label>
+          <label class="pill-item"><input type="radio" name="nashe_okay" value="No"/><span class="pill-label">No</span></label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">How often do you drink alcohol? <span class="req">*</span></label>
+        <div class="pill-group">
+          <label class="pill-item"><input type="radio" name="alcohol" value="Don't Drink" required/><span class="pill-label">🚫 Don't Drink</span></label>
+          <label class="pill-item"><input type="radio" name="alcohol" value="Occasionally"/><span class="pill-label">Occasionally</span></label>
+          <label class="pill-item"><input type="radio" name="alcohol" value="Once a month"/><span class="pill-label">Once a month</span></label>
+          <label class="pill-item"><input type="radio" name="alcohol" value="Every week"/><span class="pill-label">Every week</span></label>
+          <label class="pill-item"><input type="radio" name="alcohol" value="Daily"/><span class="pill-label">Daily</span></label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Party person?</label>
+          <div class="pill-group">
+            <label class="pill-item"><input type="radio" name="party" value="Yes"/><span class="pill-label">🎉 Party!</span></label>
+            <label class="pill-item"><input type="radio" name="party" value="Sometimes"/><span class="pill-label">Sometimes</span></label>
+            <label class="pill-item"><input type="radio" name="party" value="No"/><span class="pill-label">📚 Nah</span></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Weekend vibe?</label>
+          <div class="pill-group">
+            <label class="pill-item"><input type="radio" name="weekend" value="Chill at home"/><span class="pill-label">🛋️ Home</span></label>
+            <label class="pill-item"><input type="radio" name="weekend" value="Go out often"/><span class="pill-label">🌆 Out</span></label>
+            <label class="pill-item"><input type="radio" name="weekend" value="Mix"/><span class="pill-label">🔄 Mix</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Okay with people borrowing your things?</label>
+          <div class="pill-group">
+            <label class="pill-item"><input type="radio" name="sharing" value="Yes"/><span class="pill-label">Yes!</span></label>
+            <label class="pill-item"><input type="radio" name="sharing" value="Okay"/><span class="pill-label">Sometimes</span></label>
+            <label class="pill-item"><input type="radio" name="sharing" value="No"/><span class="pill-label">No please</span></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Study/Work from room?</label>
+          <div class="pill-group">
+            <label class="pill-item"><input type="radio" name="study_habit" value="Mostly in room"/><span class="pill-label">🏠 In room</span></label>
+            <label class="pill-item"><input type="radio" name="study_habit" value="Library/cafe"/><span class="pill-label">☕ Café</span></label>
+            <label class="pill-item"><input type="radio" name="study_habit" value="Mix"/><span class="pill-label">Mix</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">How organised are your personal belongings?</label>
+        <div class="range-wrap">
+          <span class="range-end">Scattered</span>
+          <input type="range" name="belongings_order" min="1" max="5" value="3" class="rng"/>
+          <span class="range-val" id="rv_belongings_order">3</span>
+          <span class="range-end right">Very Neat</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 3 ═══ -->
+    <div class="step-page" id="step3">
+      <div class="sec-title"><span class="sec-emoji">🍳</span> Kitchen & Interests</div>
+
+      <div class="form-group">
+        <label class="form-label">How often do you cook at home? <span class="req">*</span></label>
+        <div class="pill-group">
+          <label class="pill-item"><input type="radio" name="cook_freq" value="Daily" required/><span class="pill-label">👩‍🍳 Daily</span></label>
+          <label class="pill-item"><input type="radio" name="cook_freq" value="4-6 days"/><span class="pill-label">4–6 days</span></label>
+          <label class="pill-item"><input type="radio" name="cook_freq" value="1-3 days"/><span class="pill-label">1–3 days</span></label>
+          <label class="pill-item"><input type="radio" name="cook_freq" value="Rarely"/><span class="pill-label">Rarely</span></label>
+          <label class="pill-item"><input type="radio" name="cook_freq" value="Never"/><span class="pill-label">🍕 Never</span></label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">I prefer the kitchen to be used for…</label>
+        <div class="pill-group">
+          <label class="pill-item"><input type="radio" name="kitchen_use" value="Only home-cooked meals"/><span class="pill-label">Only home-cooked</span></label>
+          <label class="pill-item"><input type="radio" name="kitchen_use" value="Occasional snacks"/><span class="pill-label">Occasional snacks</span></label>
+          <label class="pill-item"><input type="radio" name="kitchen_use" value="No cooking preferred"/><span class="pill-label">No cooking</span></label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Guest Policy</label>
+        <div class="pill-group">
+          <label class="pill-item"><input type="radio" name="guest_policy" value="Prefer no guests"/><span class="pill-label">No guests</span></label>
+          <label class="pill-item"><input type="radio" name="guest_policy" value="Occasional friends ok"/><span class="pill-label">Occasional OK</span></label>
+          <label class="pill-item"><input type="radio" name="guest_policy" value="Frequent visitors ok"/><span class="pill-label">🚪 Open door</span></label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Okay with friends staying overnight?</label>
+          <div class="pill-group">
+            <label class="pill-item"><input type="radio" name="overnight" value="Yes"/><span class="pill-label">Yes</span></label>
+            <label class="pill-item"><input type="radio" name="overnight" value="Occasionally"/><span class="pill-label">Occasionally</span></label>
+            <label class="pill-item"><input type="radio" name="overnight" value="No"/><span class="pill-label">Prefer not</span></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Enjoy going out? (dining, fests, travel)</label>
+          <div class="pill-group">
+            <label class="pill-item"><input type="radio" name="outgoing" value="Love it"/><span class="pill-label">🌍 Love it</span></label>
+            <label class="pill-item"><input type="radio" name="outgoing" value="Sometimes"/><span class="pill-label">Sometimes</span></label>
+            <label class="pill-item"><input type="radio" name="outgoing" value="Prefer staying in"/><span class="pill-label">🏠 Homebody</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Music Taste <span class="req">*</span></label>
+          <input type="text" name="music" class="form-control" placeholder="e.g. Bollywood, Pop, K-pop, EDM" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Hobbies <span class="req">*</span></label>
+          <input type="text" name="hobbies" class="form-control" placeholder="e.g. Painting, Gaming, Reading" required/>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Sports</label>
+          <input type="text" name="sports" class="form-control" placeholder="e.g. Yoga, Cricket, Badminton"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Favourite Cuisines</label>
+          <input type="text" name="cuisine" class="form-control" placeholder="e.g. South Indian, Thai, Italian"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Top 3 interests/hobbies <span class="req">*</span></label>
+        <input type="text" name="top_interests" class="form-control" placeholder="1. Binge-watching  2. Trekking  3. Cooking" required/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">My pet peeve in shared living is…</label>
+        <input type="text" name="pet_peeve" class="form-control" placeholder="e.g. Dishes left in sink"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">One thing I CANNOT compromise on in a roommate <span class="req">*</span></label>
+        <input type="text" name="non_negotiable" class="form-control" placeholder="e.g. Must be vegetarian, no late-night calls" required/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">One thing I'm looking for in a roommate <span class="req">*</span></label>
+        <input type="text" name="looking_for" class="form-control" placeholder="e.g. Someone chill, clean and fun" required/>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 4 ═══ -->
+    <div class="step-page" id="step4">
+      <div class="sec-title"><span class="sec-emoji">🏠</span> Flat Preferences</div>
+
+      <div class="form-group">
+        <label class="form-label">Type of accommodation you prefer <span class="req">*</span></label>
+        <div class="pill-group">
+          <label class="pill-item"><input type="radio" name="accommodation" value="PG (with food)" required/><span class="pill-label">🍱 PG (with food)</span></label>
+          <label class="pill-item"><input type="radio" name="accommodation" value="Shared flat"/><span class="pill-label">🏠 Shared flat</span></label>
+          <label class="pill-item"><input type="radio" name="accommodation" value="1BHK with 2"/><span class="pill-label">1 BHK (2 ppl)</span></label>
+          <label class="pill-item"><input type="radio" name="accommodation" value="Hostel"/><span class="pill-label">🏢 Hostel</span></label>
+          <label class="pill-item"><input type="radio" name="accommodation" value="Open to anything"/><span class="pill-label">✨ Open to anything</span></label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Room preference <span class="req">*</span></label>
+          <select name="room_type" class="form-control" required>
+            <option value="">Select</option>
+            <option>Single room</option><option>Sharing room</option><option>Either is fine</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Sharing bed type</label>
+          <select name="bed_sharing" class="form-control">
+            <option value="">Select</option>
+            <option>Single bed (own)</option><option>Double bed (shared)</option><option>Either</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">BHK size</label>
+          <select name="bhk" class="form-control">
+            <option value="">Select</option>
+            <option>2 BHK</option><option>3 BHK</option><option>4 BHK</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">No. of people in flat</label>
+          <select name="flatmates" class="form-control">
+            <option value="">Select</option>
+            <option>3</option><option>4</option><option>5</option><option>6</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Distance from college <span class="req">*</span></label>
+        <div class="pill-group">
+          <label class="pill-item"><input type="radio" name="dist_college" value="Walking distance" required/><span class="pill-label">🚶 Walking</span></label>
+          <label class="pill-item"><input type="radio" name="dist_college" value="Under 2km"/><span class="pill-label">🛵 Under 2km</span></label>
+          <label class="pill-item"><input type="radio" name="dist_college" value="Under 4km"/><span class="pill-label">🚗 Under 4km</span></label>
+          <label class="pill-item"><input type="radio" name="dist_college" value="More than 4km"/><span class="pill-label">🚌 4km+</span></label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Monthly Rent Budget <span class="req">*</span></label>
+        <div class="pill-group">
+          <label class="pill-item"><input type="radio" name="budget" value="Less than 20k" required/><span class="pill-label">&lt; ₹20k</span></label>
+          <label class="pill-item"><input type="radio" name="budget" value="20-30k"/><span class="pill-label">₹20–30k</span></label>
+          <label class="pill-item"><input type="radio" name="budget" value="30-40k"/><span class="pill-label">₹30–40k</span></label>
+          <label class="pill-item"><input type="radio" name="budget" value="40-50k"/><span class="pill-label">₹40–50k</span></label>
+          <label class="pill-item"><input type="radio" name="budget" value="More than 50k"/><span class="pill-label">&gt; ₹50k</span></label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Duration of stay <span class="req">*</span></label>
+        <div class="pill-group">
+          <label class="pill-item"><input type="radio" name="duration" value="6 months" required/><span class="pill-label">6 months</span></label>
+          <label class="pill-item"><input type="radio" name="duration" value="1 year"/><span class="pill-label">1 year</span></label>
+          <label class="pill-item"><input type="radio" name="duration" value="2 years"/><span class="pill-label">2 years (full MBA)</span></label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Amenities you need <span class="req">*</span></label>
+        <div class="check-grid">
+          <label class="pill-item"><input type="checkbox" name="amenities" value="Microwave"/><span class="pill-label">Microwave</span></label>
+          <label class="pill-item"><input type="checkbox" name="amenities" value="Fridge"/><span class="pill-label">❄️ Fridge</span></label>
+          <label class="pill-item"><input type="checkbox" name="amenities" value="AC"/><span class="pill-label">🌬️ AC</span></label>
+          <label class="pill-item"><input type="checkbox" name="amenities" value="Study Table"/><span class="pill-label">Study Table</span></label>
+          <label class="pill-item"><input type="checkbox" name="amenities" value="Cupboard"/><span class="pill-label">Cupboard</span></label>
+          <label class="pill-item"><input type="checkbox" name="amenities" value="Geyser"/><span class="pill-label">🚿 Geyser</span></label>
+          <label class="pill-item"><input type="checkbox" name="amenities" value="Sofa"/><span class="pill-label">Sofa</span></label>
+          <label class="pill-item"><input type="checkbox" name="amenities" value="WiFi"/><span class="pill-label">📶 WiFi</span></label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Travel to college by</label>
+        <div class="check-grid">
+          <label class="pill-item"><input type="checkbox" name="travel_mode" value="Walking"/><span class="pill-label">🚶 Walking</span></label>
+          <label class="pill-item"><input type="checkbox" name="travel_mode" value="Bicycle"/><span class="pill-label">🚲 Bicycle</span></label>
+          <label class="pill-item"><input type="checkbox" name="travel_mode" value="Bike/Scooter"/><span class="pill-label">🛵 Scooter</span></label>
+          <label class="pill-item"><input type="checkbox" name="travel_mode" value="Auto"/><span class="pill-label">🛺 Auto</span></label>
+          <label class="pill-item"><input type="checkbox" name="travel_mode" value="Cab"/><span class="pill-label">🚕 Cab</span></label>
+          <label class="pill-item"><input type="checkbox" name="travel_mode" value="Bus"/><span class="pill-label">🚌 Bus</span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 5 ═══ -->
+    <div class="step-page" id="step5">
+      <div class="sec-title"><span class="sec-emoji">✨</span> Final Touches</div>
+
+      <div class="form-group">
+        <label class="form-label">Living cleanliness preference</label>
+        <div class="pill-group">
+          <label class="pill-item"><input type="radio" name="living" value="Prefer Cleanliness"/><span class="pill-label">🧹 Clean freak</span></label>
+          <label class="pill-item"><input type="radio" name="living" value="Medium"/><span class="pill-label">⚖️ Medium</span></label>
+          <label class="pill-item"><input type="radio" name="living" value="Chill with Mess"/><span class="pill-label">😌 Chill w/ mess</span></label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Safety features I need in my accommodation</label>
+        <div class="check-grid">
+          <label class="pill-item"><input type="checkbox" name="safety_features" value="CCTV"/><span class="pill-label">📹 CCTV</span></label>
+          <label class="pill-item"><input type="checkbox" name="safety_features" value="Security guard"/><span class="pill-label">💂 Guard</span></label>
+          <label class="pill-item"><input type="checkbox" name="safety_features" value="Main gate lock"/><span class="pill-label">🔐 Gate Lock</span></label>
+          <label class="pill-item"><input type="checkbox" name="safety_features" value="Female only floor"/><span class="pill-label">👩 Female floor</span></label>
+          <label class="pill-item"><input type="checkbox" name="safety_features" value="Safe neighborhood"/><span class="pill-label">📍 Safe area</span></label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Comfortable with late-night cab rides alone?</label>
+        <div class="pill-group">
+          <label class="pill-item"><input type="radio" name="solo_cab" value="Yes"/><span class="pill-label">Yes, fine</span></label>
+          <label class="pill-item"><input type="radio" name="solo_cab" value="Situational"/><span class="pill-label">Depends on area</span></label>
+          <label class="pill-item"><input type="radio" name="solo_cab" value="Prefer not"/><span class="pill-label">Prefer not</span></label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Address / Preferred Area</label>
+        <input type="text" name="address" class="form-control" placeholder="Area or locality you're looking at"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Anything else you want potential roommates to know?</label>
+        <textarea name="extra_info" class="form-control" placeholder="Free text — be yourself!"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Would you like your contact shared with matches? <span class="req">*</span></label>
+        <div class="pill-group">
+          <label class="pill-item"><input type="radio" name="share_contact" value="Yes" required/><span class="pill-label">📲 Yes, share my details</span></label>
+          <label class="pill-item"><input type="radio" name="share_contact" value="No"/><span class="pill-label">🔒 Keep private</span></label>
+        </div>
+      </div>
+
+      <div style="background:rgba(255,77,141,0.08);border:1px solid rgba(255,77,141,0.2);border-radius:14px;padding:1.1rem 1.25rem;margin-bottom:1.75rem">
+        <label style="display:flex;gap:12px;align-items:flex-start;cursor:pointer">
+          <input type="checkbox" id="termsCheck" style="margin-top:3px;accent-color:var(--pink);width:18px;height:18px;flex-shrink:0"/>
+          <span style="font-size:.84rem;color:rgba(255,255,255,0.72);line-height:1.65">
+            I confirm that the information I've provided is accurate. I understand my data will be used solely for roommate matching for MBA Batch 2026–2028. <span class="req">*</span>
+          </span>
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-full" id="submitBtn">🚀 Submit My Profile</button>
+    </div>
+
+    <!-- NAV BUTTONS -->
+    <div class="form-nav" id="formNav">
+      <button type="button" class="btn btn-outline" id="prevBtn" onclick="goStep(-1)">← Back</button>
+      <button type="button" class="btn btn-primary" id="nextBtn" onclick="goStep(1)">Next →</button>
+    </div>
+    </form>
+
+    <!-- SUCCESS -->
+    <div class="success-view" id="successView">
+      <span class="s-emoji">🎉</span>
+      <h2>You're in!</h2>
+      <p>Profile submitted! We'll match you with compatible roommates and email your results. Check the <a href="./updates.html" style="color:var(--blush)">Updates page</a> for news.</p>
+      <a href="./matches.html" class="btn btn-primary" style="margin-top:1rem">💞 See Matches</a>
+    </div>
+  </div>
+</div>
+
+<div class="loader-overlay" id="loader"><div style="text-align:center"><div class="loader-ring"></div><p style="margin-top:1rem;color:rgba(255,255,255,0.55);font-size:.88rem">Just a moment ✨</p></div></div>
+<div class="toast-box" id="toastBox"></div>
+<div class="wm">Harshjot 💜</div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxYtRIKAZXEwCl_q2meKcigohILFrjutaMgoC62KGoYPQX7hCuJLCXI5SfT5TnxEm8jOA/exec';
+
+// ── NAV ───────────────────────────────────────────────────────────────────
+document.getElementById('ham').addEventListener('click',()=>document.getElementById('navLinks').classList.toggle('open'));
+
+// ── TOAST ─────────────────────────────────────────────────────────────────
+function toast(msg, type='info'){
+  const icons={ok:'✅',err:'❌',info:'ℹ️'};
+  const el=document.createElement('div');
+  el.className=`toast ${type}`;
+  el.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span class="toast-msg">${msg}</span>`;
+  document.getElementById('toastBox').appendChild(el);
+  setTimeout(()=>el.remove(),4500);
+}
+
+// ── LOADER ────────────────────────────────────────────────────────────────
+const loader=document.getElementById('loader');
+const showLoader=()=>loader.classList.add('show');
+const hideLoader=()=>loader.classList.remove('show');
+
+// ── RANGE SLIDERS ─────────────────────────────────────────────────────────
+document.querySelectorAll('input.rng').forEach(r=>{
+  const id='rv_'+r.name;
+  const upd=()=>{
+    const el=document.getElementById(id);
+    if(el) el.textContent=r.value;
+    const pct=((r.value-r.min)/(r.max-r.min))*100;
+    r.style.background=`linear-gradient(to right,#FF4D8D ${pct}%,rgba(255,255,255,0.15) ${pct}%)`;
+  };
+  r.addEventListener('input',upd);
+  upd();
+});
+
+// ── STEP LOGIC ────────────────────────────────────────────────────────────
+let cur=1; const TOTAL=5;
+
+function updateStepUI(){
+  document.querySelectorAll('.step-page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('step'+cur).classList.add('active');
+
+  document.querySelectorAll('.step-item').forEach(item=>{
+    const s=parseInt(item.dataset.s);
+    const circ=document.getElementById('sc'+s);
+    item.classList.remove('active','done');
+    if(s===cur){item.classList.add('active');circ.textContent=s;}
+    else if(s<cur){item.classList.add('done');circ.textContent='✓';}
+    else{circ.textContent=s;}
+  });
+
+  document.getElementById('prog').style.width=(cur/TOTAL*100)+'%';
+  document.getElementById('prevBtn').style.display=cur===1?'none':'';
+  document.getElementById('nextBtn').style.display=cur===TOTAL?'none':'';
+  document.getElementById('formNav').style.display=cur===TOTAL?'none':'flex';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function goStep(dir){
+  if(dir===1){
+    if(cur===1){
+      const email=document.querySelector('[name="email"]').value.trim();
+      const phone=document.querySelector('[name="phone"]').value.replace(/\s/g,'');
+      if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){toast('Please enter a valid email address','err');return;}
+      if(!phone||!/^[6-9]\d{9}$/.test(phone)){toast('Please enter a valid 10-digit Indian mobile number','err');return;}
+      if(!document.querySelector('[name="name"]').value.trim()){toast('Please enter your full name','err');return;}
+    }
+  }
+  cur=Math.min(TOTAL,Math.max(1,cur+dir));
+  updateStepUI();
+}
+
+// ── EMAIL / PHONE LIVE VALIDATION ─────────────────────────────────────────
+document.getElementById('fEmail').addEventListener('blur',function(){
+  const h=document.getElementById('hEmail');
+  if(!this.value)return;
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value)){h.textContent='⚠️ Invalid email';h.className='field-hint hint-err';}
+  else{h.textContent='✓ Looks good!';h.className='field-hint hint-ok';}
+});
+document.getElementById('fPhone').addEventListener('blur',function(){
+  const h=document.getElementById('hPhone');
+  const v=this.value.replace(/\s/g,'');
+  if(!v)return;
+  if(!/^[6-9]\d{9}$/.test(v)){h.textContent='⚠️ Invalid Indian number';h.className='field-hint hint-err';}
+  else{h.textContent='✓ Valid!';h.className='field-hint hint-ok';}
+});
+
+// ── FORM SUBMIT ───────────────────────────────────────────────────────────
+// ── FORM SUBMIT (Stable GET Version) ──────────────────────────────────────
+document.getElementById('mainForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  if (!document.getElementById('termsCheck').checked) {
+    toast('Please accept the terms to continue', 'err');
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  const originalText = btn.textContent;
+  btn.textContent = '⏳ Submitting…';
+  btn.disabled = true;
+
+  try {
+    showLoader();
+
+    const formData = new FormData(this);
+    const data = { 
+      action: 'submit', 
+      batch: 'MBA 2026-2028', 
+      timestamp: new Date().toISOString() 
+    };
+
+    formData.forEach((value, key) => {
+      if (data[key]) {
+        data[key] = Array.isArray(data[key]) ? [...data[key], value] : [data[key], value];
+      } else {
+        data[key] = value;
+      }
+    });
+
+    ['amenities', 'safety_features', 'travel_mode'].forEach(k => {
+      data[k] = [...document.querySelectorAll(`[name="${k}"]:checked`)].map(c => c.value).join(', ');
+    });
+
+    const url = new URL(APPS_SCRIPT_URL);
+    Object.keys(data).forEach(key => {
+      if (data[key] !== null && data[key] !== undefined && data[key] !== '') {
+        url.searchParams.set(key, String(data[key]));
+      }
+    });
+
+    const res = await fetch(url.toString());
+    const text = await res.text();
+    let json = JSON.parse(text);
+
+    hideLoader();
+
+    if (json && json.result === 'success') {
+      document.getElementById('mainForm').style.display = 'none';
+      document.getElementById('formNav').style.display = 'none';
+      document.querySelector('.step-bar').style.display = 'none';
+      document.querySelector('.prog-outer').style.display = 'none';
+      document.querySelector('.info-note').style.display = 'none';
+      document.getElementById('successView').style.display = 'block';
+      toast('Profile submitted successfully! 🎉', 'ok');
+    } else {
+      throw new Error(json?.message || json?.error || 'Submission failed');
+    }
+  } catch (err) {
+    hideLoader();
+    btn.textContent = originalText;
+    btn.disabled = false;
+    console.error(err);
+    toast(err.message || 'Could not submit. Please try again.', 'err');
+  }
+});
+  
+
+updateStepUI();
+</script>
+</body>
+</html>
