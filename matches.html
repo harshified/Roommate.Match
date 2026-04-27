@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Find Matches · RoomieMATCH</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💞</text></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --plum:#1E0030;--purple:#4A1070;--lavender:#B57BEE;--soft-lav:#D4AAFF;
+  --blush:#FF8FAB;--pink:#FF4D8D;--rose:#FF1F71;
+  --glass:rgba(255,255,255,0.08);--glass-b:rgba(255,255,255,0.18);
+  --glow-pink:0 8px 32px rgba(255,77,141,0.35);--glow-lav:0 8px 32px rgba(181,123,238,0.3);
+  --ff-head:'Playfair Display',Georgia,serif;--ff-body:'DM Sans',system-ui,sans-serif;--ff-script:'Dancing Script',cursive;
+}
+body{font-family:var(--ff-body);background:var(--plum);color:#fff;min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--plum)}::-webkit-scrollbar-thumb{background:var(--lavender);border-radius:3px}
+body::before{content:'';position:fixed;inset:0;z-index:-1;background:radial-gradient(ellipse 70% 60% at 10% 0%,rgba(255,77,141,0.18) 0%,transparent 55%),radial-gradient(ellipse 60% 70% at 92% 15%,rgba(181,123,238,0.22) 0%,transparent 55%),var(--plum)}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:200;height:66px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(30,0,48,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-b)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--pink),var(--lavender));display:grid;place-items:center;font-size:17px;box-shadow:var(--glow-pink)}
+.logo-text{font-family:var(--ff-script);font-size:1.45rem;background:linear-gradient(90deg,var(--soft-lav),var(--blush));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.logo-sub{display:block;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--lavender);-webkit-text-fill-color:var(--lavender)}
+.nav-links{display:flex;gap:2px;list-style:none}
+.nav-links a{color:rgba(255,255,255,0.7);text-decoration:none;padding:7px 14px;border-radius:40px;font-size:0.84rem;font-weight:500;transition:all .22s;display:flex;align-items:center;gap:5px;border:1px solid transparent}
+.nav-links a:hover,.nav-links a.active{background:var(--glass);border-color:var(--glass-b);color:#fff}
+.nav-links a.active{background:linear-gradient(135deg,rgba(255,77,141,.25),rgba(181,123,238,.25));color:var(--blush)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:5px}
+.hamburger span{display:block;width:22px;height:2px;background:var(--soft-lav);border-radius:2px}
+@media(max-width:700px){.hamburger{display:flex}.nav-links{display:none;position:fixed;top:66px;left:0;right:0;background:rgba(20,0,35,.97);backdrop-filter:blur(20px);flex-direction:column;padding:1.25rem;border-bottom:1px solid var(--glass-b);gap:3px}.nav-links.open{display:flex}.nav-links a{border-radius:12px;padding:11px 14px}}
+
+/* PAGE HEADER */
+.page-header{text-align:center;padding:3rem 1.5rem 2rem}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,77,141,0.12);border:1px solid rgba(255,77,141,0.3);border-radius:50px;padding:7px 18px;font-size:0.78rem;font-weight:600;color:var(--blush);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1.2rem}
+.page-header h1{font-family:var(--ff-head);font-size:clamp(2rem,5vw,3.2rem);font-weight:900;line-height:1.08;margin-bottom:.8rem}
+.grad-text{font-style:italic;background:linear-gradient(100deg,var(--blush),var(--soft-lav));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.page-header p{font-size:.95rem;color:rgba(255,255,255,0.55);max-width:480px;margin:0 auto;line-height:1.7}
+
+/* SEARCH BOX */
+.search-wrap{max-width:580px;margin:0 auto 2.5rem;padding:0 1.25rem}
+.search-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.13);border-radius:22px;padding:1.75rem;backdrop-filter:blur(14px)}
+.search-card label{display:block;font-size:.82rem;font-weight:600;color:var(--soft-lav);margin-bottom:8px}
+.search-row{display:flex;gap:10px}
+.form-control{width:100%;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.13);border-radius:12px;padding:12px 15px;color:#fff;font-family:var(--ff-body);font-size:.88rem;transition:all .22s;outline:none;-webkit-appearance:none}
+.form-control::placeholder{color:rgba(255,255,255,0.3)}
+.form-control:focus{border-color:var(--lavender);background:rgba(255,255,255,0.1);box-shadow:0 0 0 3px rgba(181,123,238,0.15)}
+.search-note{font-size:.75rem;color:rgba(255,255,255,0.35);margin-top:9px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:12px 22px;border-radius:50px;font-family:var(--ff-body);font-weight:600;font-size:.88rem;cursor:pointer;border:none;text-decoration:none;transition:all .25s;white-space:nowrap}
+.btn-primary{background:linear-gradient(135deg,var(--pink),var(--rose));color:#fff;box-shadow:var(--glow-pink)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(255,31,113,.45)}
+.btn-outline{background:transparent;color:var(--soft-lav);border:1.5px solid var(--lavender)}
+.btn-outline:hover{background:var(--glass);color:#fff}
+.btn-sm{padding:8px 16px;font-size:.8rem}
+
+/* CONTENT AREA */
+.content-wrap{max-width:900px;margin:0 auto;padding:0 1.25rem 5rem}
+
+/* FILTER + SORT BAR */
+.controls-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.75rem;margin-bottom:1.5rem}
+.filter-pills{display:flex;gap:6px;flex-wrap:wrap}
+.fpill{padding:7px 16px;border-radius:50px;border:1.5px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.65);font-size:.8rem;cursor:pointer;font-family:var(--ff-body);transition:all .2s}
+.fpill.active,.fpill:hover{background:rgba(181,123,238,0.2);border-color:var(--lavender);color:#fff}
+.sort-row{display:flex;gap:6px}
+
+/* MATCH CARD */
+.match-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.11);border-radius:22px;padding:1.5rem;margin-bottom:1.1rem;display:grid;grid-template-columns:auto 1fr auto;gap:1.25rem;align-items:start;transition:all .3s;animation:fadeUp .4s ease both}
+.match-card:hover{border-color:rgba(181,123,238,0.4);box-shadow:var(--glow-lav);transform:translateY(-2px)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.match-card{grid-template-columns:auto 1fr;}.match-score-col{grid-column:1/-1;display:flex;justify-content:center}}
+
+/* AVATAR */
+.avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--lavender));display:grid;place-items:center;font-size:1.5rem;font-weight:700;border:2.5px solid rgba(181,123,238,0.5);flex-shrink:0}
+.avatar.ghost{background:linear-gradient(135deg,#ffd700,#ff8fab)}
+
+/* MATCH INFO */
+.match-name{font-family:var(--ff-head);font-size:1.05rem;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.ghost-badge{background:linear-gradient(135deg,rgba(255,215,0,.25),rgba(255,143,171,.25));border:1px solid rgba(255,215,0,.45);border-radius:6px;padding:2px 9px;font-size:.7rem;color:#ffd700;font-weight:700;font-family:var(--ff-body)}
+.tag-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{display:inline-flex;align-items:center;padding:4px 11px;border-radius:50px;font-size:.74rem;font-weight:600}
+.tag-lav{background:rgba(181,123,238,.18);color:var(--soft-lav);border:1px solid rgba(181,123,238,.3)}
+.tag-pink{background:rgba(255,77,141,.15);color:var(--blush);border:1px solid rgba(255,77,141,.28)}
+.tag-green{background:rgba(74,222,128,.12);color:#86efac;border:1px solid rgba(74,222,128,.28)}
+
+/* COMPAT BAR */
+.compat-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.compat-track{flex:1;height:7px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden}
+.compat-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--pink),var(--lavender));transition:width 1s ease}
+.compat-pct{font-size:.85rem;font-weight:700;min-width:38px;text-align:right}
+
+/* DIM GRID */
+.dim-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;margin-top:8px}
+.dim-item{font-size:.74rem}
+.dim-label{color:rgba(255,255,255,0.45);margin-bottom:3px}
+.dim-track{height:3px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden}
+.dim-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--blush),var(--soft-lav));transition:width .9s ease}
+
+/* CONTACT REVEAL */
+.reveal-btn{margin-top:10px}
+.contact-box{display:none;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.25);border-radius:10px;padding:10px 14px;margin-top:9px;font-size:.84rem;line-height:1.8}
+.contact-box.show{display:block}
+.contact-box a{color:var(--blush)}
+
+/* SCORE RING */
+.score-col{text-align:center;flex-shrink:0;min-width:72px}
+.score-ring{width:72px;height:72px;position:relative;display:inline-block}
+.score-ring svg{transform:rotate(-90deg)}
+.score-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;line-height:1}
+.score-num small{font-size:.56rem;color:rgba(255,255,255,.45);font-weight:400;margin-top:2px}
+
+/* EMPTY / LOADING */
+.empty-state{text-align:center;padding:4rem 1.5rem}
+.empty-state .e-icon{font-size:3rem;margin-bottom:.9rem;display:block}
+.empty-state h3{font-family:var(--ff-head);font-size:1.3rem;margin-bottom:.5rem}
+.empty-state p{color:rgba(255,255,255,0.45);font-size:.9rem}
+.skel-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:22px;padding:1.5rem;margin-bottom:1rem;display:flex;gap:1.25rem}
+.skel-av{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.07);flex-shrink:0;animation:shim 1.4s infinite}
+.skel-body{flex:1;display:flex;flex-direction:column;gap:9px}
+.skel-line{height:12px;border-radius:6px;background:rgba(255,255,255,0.07);animation:shim 1.4s infinite}
+@keyframes shim{0%,100%{opacity:.5}50%{opacity:1}}
+
+/* BADGE */
+.badge{display:inline-flex;align-items:center;padding:3px 11px;border-radius:50px;font-size:.72rem;font-weight:600}
+.badge-purple{background:rgba(181,123,238,.2);color:var(--soft-lav);border:1px solid rgba(181,123,238,.35)}
+
+/* TOAST / LOADER */
+.toast-box{position:fixed;bottom:22px;right:22px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{background:rgba(30,0,48,.96);border:1px solid var(--glass-b);backdrop-filter:blur(18px);border-radius:14px;padding:12px 17px;min-width:240px;display:flex;align-items:center;gap:10px;animation:toastIn .35s ease;box-shadow:var(--glow-lav)}
+.toast.err{border-left:4px solid var(--rose)}.toast.ok{border-left:4px solid #4ade80}.toast.info{border-left:4px solid var(--lavender)}
+.toast-msg{font-size:.86rem;color:#fff}
+@keyframes toastIn{from{opacity:0;transform:translateX(34px)}to{opacity:1;transform:translateX(0)}}
+.loader-overlay{position:fixed;inset:0;background:rgba(30,0,48,.85);backdrop-filter:blur(10px);display:none;place-items:center;z-index:9998}
+.loader-overlay.show{display:grid}
+.loader-ring{width:50px;height:50px;border:4px solid rgba(255,255,255,0.1);border-top-color:var(--blush);border-right-color:var(--lavender);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.wm{position:fixed;bottom:10px;right:14px;color:transparent;font-size:.65rem;user-select:text;pointer-events:none;z-index:9999}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="./index.html">
+    <div class="logo-icon">💜</div>
+    <div><span class="logo-text">RoomieMATCH</span><span class="logo-sub">MBA 2026–2028</span></div>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="./index.html">🏠 Home</a></li>
+    <li><a href="./form.html">📋 Join</a></li>
+    <li><a href="./matches.html" class="active">💞 Matches</a></li>
+    <li><a href="./updates.html">📢 Updates</a></li>
+    <li><a href="./admin.html">🔐 Admin</a></li>
+  </ul>
+  <button class="hamburger" id="ham"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="page-header">
+  <div class="eyebrow">💞 Smart Matching</div>
+  <h1>Find Your <span class="grad-text">Perfect</span> Match</h1>
+  <p>Enter the email you registered with to see your compatibility scores with other MBA students.</p>
+</div>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <div class="search-card">
+    <label>Your registered email address</label>
+    <div class="search-row">
+      <input type="email" id="searchEmail" class="form-control" placeholder="you@email.com" autocomplete="email"/>
+      <button class="btn btn-primary" onclick="runSearch()">💞 Match Me</button>
+    </div>
+    <p class="search-note">Only people who have filled the profile form will appear as matches.</p>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="content-wrap">
+
+  <!-- LOADING SKELETONS -->
+  <div id="loadingState" style="display:none">
+    <div class="skel-card"><div class="skel-av"></div><div class="skel-body"><div class="skel-line" style="width:55%"></div><div class="skel-line" style="width:35%"></div><div class="skel-line" style="width:75%"></div></div></div>
+    <div class="skel-card"><div class="skel-av"></div><div class="skel-body"><div class="skel-line" style="width:60%"></div><div class="skel-line" style="width:40%"></div><div class="skel-line" style="width:70%"></div></div></div>
+    <div class="skel-card"><div class="skel-av"></div><div class="skel-body"><div class="skel-line" style="width:50%"></div><div class="skel-line" style="width:45%"></div><div class="skel-line" style="width:65%"></div></div></div>
+  </div>
+
+  <!-- RESULTS AREA -->
+  <div id="resultsArea" style="display:none">
+    <div class="controls-bar">
+      <div>
+        <div style="font-family:var(--ff-head);font-size:1.2rem;font-weight:700" id="resTitle">Your Matches</div>
+        <div style="font-size:.8rem;color:rgba(255,255,255,.45);margin-top:3px" id="resCount"></div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <span class="badge badge-purple" id="countBadge"></span>
+        <button class="btn btn-outline btn-sm" onclick="sortBy('score')">Sort by %</button>
+        <button class="btn btn-outline btn-sm" onclick="sortBy('budget')">Sort by Budget</button>
+      </div>
+    </div>
+
+    <div class="filter-pills" style="margin-bottom:1.25rem" id="filterBar">
+      <button class="fpill active" onclick="applyFilter('all',this)">All</button>
+      <button class="fpill" onclick="applyFilter('90+',this)">🔥 90%+</button>
+      <button class="fpill" onclick="applyFilter('70+',this)">✨ 70%+</button>
+      <button class="fpill" onclick="applyFilter('female',this)">👩 Female</button>
+      <button class="fpill" onclick="applyFilter('male',this)">👨 Male</button>
+    </div>
+
+    <div id="matchGrid"></div>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div class="empty-state" id="emptyState">
+    <span class="e-icon">🔍</span>
+    <h3 id="emptyTitle">Enter your email to see matches</h3>
+    <p id="emptyMsg">Your compatibility results will appear here after you search.</p>
+  </div>
+</div>
+
+<div class="loader-overlay" id="loader"><div style="text-align:center"><div class="loader-ring"></div><p style="margin-top:1rem;color:rgba(255,255,255,0.55);font-size:.88rem">Finding your matches ✨</p></div></div>
+<div class="toast-box" id="toastBox"></div>
+<div class="wm">Harshjot 💜 </div>
+
+<script>
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxYtRIKAZXEwCl_q2meKcigohILFrjutaMgoC62KGoYPQX7hCuJLCXI5SfT5TnxEm8jOA/exec';
+const GHOST_EMAIL     = 'roommatematch@gmail.com';
+
+const  = {
+  name:'Nims ✨', email:GHOST_EMAIL, gender:'✨', budget:'Any',
+  food:'Flexible', accommodation:'Open to anything', duration:'2 years',
+  hobbies:'everything you love', cook_freq:'Occasionally', kitchen_use:'Occasional snacks',
+  smoking:'No', nashe_okay:'Depends', alcohol:'Occasionally', share_contact:'Yes',
+  cleanliness:3, noise_tolerance:3, score:100, isGhost:true,
+};
+
+let allMatches=[], myProfile=null;
+
+// Nav
+document.getElementById('ham').addEventListener('click',()=>document.getElementById('navLinks').classList.toggle('open'));
+
+// Toast
+function toast(msg,type='info'){
+  const icons={ok:'✅',err:'❌',info:'ℹ️'};
+  const el=document.createElement('div');
+  el.className=`toast ${type}`;
+  el.innerHTML=`<span>${icons[type]}</span><span class="toast-msg">${msg}</span>`;
+  document.getElementById('toastBox').appendChild(el);
+  setTimeout(()=>el.remove(),4500);
+}
+
+// Loader
+const loader=document.getElementById('loader');
+const showLoader=()=>loader.classList.add('show');
+const hideLoader=()=>loader.classList.remove('show');
+
+// Budget index for sorting
+function budgetIdx(b){return{'Less than 20k':0,'20-30k':1,'30-40k':2,'40-50k':3,'More than 50k':4}[b]??2}
+
+// Matching engine
+function computeScore(a,b){
+  let t=0;
+  const W={gender:8,lifestyle:15,budget:15,accommodation:10,food:12,smoking:10,alcohol:8,habits:8,duration:8,vibe:6};
+  if(a.gender===b.gender) t+=W.gender;
+  const bd=Math.abs(budgetIdx(a.budget)-budgetIdx(b.budget));
+  t+=bd===0?W.budget:bd===1?W.budget*.5:0;
+  if(a.smoking===b.smoking) t+=W.smoking;
+  else if(a.nashe_okay==='Yes'||b.nashe_okay==='Yes') t+=W.smoking*.3;
+  const nd="Don't Drink";
+  if(a.alcohol===b.alcohol) t+=W.alcohol;
+  else if(a.alcohol!==nd&&b.alcohol!==nd) t+=W.alcohol*.5;
+  if(a.food===b.food) t+=W.food;
+  else if(a.food==='Flexible'||b.food==='Flexible') t+=W.food*.8;
+  else if(['Non-vegetarian','Eggetarian'].includes(a.food)&&['Non-vegetarian','Eggetarian'].includes(b.food)) t+=W.food*.5;
+  const n=v=>parseInt(v)||3;
+  const sl=1-Math.abs(n(a.sleep_time)-n(b.sleep_time))/4;
+  const cl=1-Math.abs(n(a.cleanliness)-n(b.cleanliness))/4;
+  const ns=1-Math.abs(n(a.noise_tolerance)-n(b.noise_tolerance))/4;
+  t+=W.lifestyle*Math.max(0,(sl+cl+ns)/3);
+  if(a.accommodation===b.accommodation) t+=W.accommodation;
+  else if(a.accommodation==='Open to anything'||b.accommodation==='Open to anything') t+=W.accommodation*.8;
+  if(a.duration===b.duration) t+=W.duration; else t+=W.duration*.3;
+  if(a.cook_freq===b.cook_freq) t+=W.habits*.5;
+  if(a.kitchen_use===b.kitchen_use) t+=W.habits*.5;
+  const h1=(a.hobbies||'').toLowerCase().split(/,|;/).map(s=>s.trim()).filter(Boolean);
+  const h2=(b.hobbies||'').toLowerCase().split(/,|;/).map(s=>s.trim()).filter(Boolean);
+  const ov=h1.filter(h=>h2.some(hb=>hb.includes(h)||h.includes(hb)));
+  if(ov.length) t+=Math.min(W.vibe,ov.length*2);
+  return Math.round(Math.min(t,100));
+}
+
+async function runSearch(){
+  const email=document.getElementById('searchEmail').value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){toast('Please enter a valid email address','err');return;}
+
+  document.getElementById('resultsArea').style.display='none';
+  document.getElementById('emptyState').style.display='none';
+  document.getElementById('loadingState').style.display='block';
+  showLoader();
+
+  try{
+    const url=new URL(APPS_SCRIPT_URL);
+    url.searchParams.set('action','getMatches');
+    url.searchParams.set('email',email);
+    const res=await fetch(url.toString());
+    const json=await res.json();
+    hideLoader();
+    document.getElementById('loadingState').style.display='none';
+
+    if(!json||json.error){
+      document.getElementById('emptyState').style.display='block';
+      document.getElementById('emptyTitle').textContent=json?.error||'Email not found';
+      document.getElementById('emptyMsg').textContent="Make sure you've filled the form with this exact email.";
+      return;
+    }
+
+    myProfile=json.profile;
+    const others=(json.others||[]).filter(p=>(p.email||'').toLowerCase()!==email.toLowerCase());
+    allMatches=[{...GHOST},...others.map(p=>({...p,score:computeScore(myProfile,p)})).sort((a,b)=>b.score-a.score)];
+    renderMatches(allMatches);
+  }catch(err){
+    hideLoader();
+    document.getElementById('loadingState').style.display='none';
+    document.getElementById('emptyState').style.display='block';
+    document.getElementById('emptyTitle').textContent='Could not load matches';
+    document.getElementById('emptyMsg').textContent='The data may not be live yet. Check the Updates page or ask the coordinator!';
+    console.error(err);
+  }
+}
+
+function renderMatches(matches){
+  document.getElementById('resultsArea').style.display='block';
+  document.getElementById('emptyState').style.display='none';
+  document.getElementById('countBadge').textContent=`${matches.length} match${matches.length!==1?'es':''}`;
+  document.getElementById('resCount').textContent=`Showing ${matches.length} compatible roommates`;
+
+  const grid=document.getElementById('matchGrid');
+  if(!matches.length){
+    grid.innerHTML='<p style="color:rgba(255,255,255,.45);text-align:center;padding:2rem">No matches in this filter.</p>';
+    return;
+  }
+
+  grid.innerHTML=matches.map((m,i)=>{
+    const score=m.score||0;
+    const clr=score>=85?'#4ade80':score>=65?'var(--blush)':'var(--lavender)';
+    const initials=(m.name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    const canShare=m.share_contact!=='No';
+    const circ=2*Math.PI*28;
+    const dash=circ*(score/100);
+
+    const dims=[
+      {label:'Lifestyle',val:Math.min(100,Math.round(score*.9+Math.random()*10))},
+      {label:'Budget',val:m.budget===myProfile?.budget?100:60},
+      {label:'Food',val:m.food===myProfile?.food?100:m.food==='Flexible'?80:50},
+      {label:'Vibes',val:Math.min(100,Math.round(score*.85+Math.random()*15))},
+    ];
+
+    return `<div class="match-card" style="animation-delay:${i*.06}s" data-score="${score}" data-gender="${m.gender||''}">
+      <div class="avatar${m.isGhost?' ghost':''}">${m.isGhost?'⭐':initials}</div>
+      <div>
+        <div class="match-name">
+          ${m.name||'Anonymous'}
+          ${m.isGhost?'<span class="ghost-badge">Coordinator ⭐</span>':''}
+        </div>
+        <div class="tag-row">
+          ${m.gender?`<span class="tag tag-lav">${m.gender}</span>`:''}
+          ${m.budget?`<span class="tag tag-pink">💰 ${m.budget}</span>`:''}
+          ${m.food?`<span class="tag tag-green">${m.food}</span>`:''}
+          ${m.accommodation?`<span class="tag tag-lav">🏠 ${m.accommodation}</span>`:''}
+          ${m.duration?`<span class="tag tag-lav">📅 ${m.duration}</span>`:''}
+        </div>
+        <div class="compat-row">
+          <div class="compat-track"><div class="compat-fill" data-w="${score}" style="width:0%"></div></div>
+          <span class="compat-pct" style="color:${clr}">${score}%</span>
+        </div>
+        <div class="dim-grid">
+          ${dims.map(d=>`<div class="dim-item"><div class="dim-label">${d.label}</div><div class="dim-track"><div class="dim-fill" data-w="${d.val}" style="width:0%"></div></div></div>`).join('')}
+        </div>
+        ${canShare&&!m.isGhost?`<button class="btn btn-outline btn-sm reveal-btn" onclick="toggleContact(this,'${m.email||''}','${m.phone||''}','${m.instagram||''}')">📱 View Contact</button>`:''}
+        ${m.isGhost?`<p style="font-size:.78rem;color:rgba(255,255,255,.35);margin-top:8px">✨ Matchmaker's profile — Not a roommate, just the architect of your peace.</p>`:''}
+        ${!canShare&&!m.isGhost?`<p style="font-size:.78rem;color:rgba(255,255,255,.35);margin-top:8px">🔒 This person prefers to keep contact private.</p>`:''}
+        <div class="contact-box"></div>
+      </div>
+      <div class="score-col">
+        <div class="score-ring">
+          <svg width="72" height="72" viewBox="0 0 72 72">
+            <circle cx="36" cy="36" r="28" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="5"/>
+            <circle cx="36" cy="36" r="28" fill="none" stroke="url(#rg${i})" stroke-width="5" stroke-linecap="round" stroke-dasharray="${dash} ${circ-dash}" style="transition:stroke-dasharray 1s ease" data-dash="${dash}" data-circ="${circ}"/>
+            <defs><linearGradient id="rg${i}" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:${clr}"/><stop offset="100%" style="stop-color:var(--lavender)"/></linearGradient></defs>
+          </svg>
+          <div class="score-num"><span style="color:${clr}">${score}</span><small>%</small></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Animate bars after render
+  setTimeout(()=>{
+    grid.querySelectorAll('[data-w]').forEach(el=>{el.style.width=el.dataset.w+'%'});
+  },100);
+}
+
+function toggleContact(btn,email,phone,insta){
+  const box=btn.nextElementSibling;
+  if(box.classList.contains('show')){box.classList.remove('show');btn.textContent='📱 View Contact';return;}
+  box.innerHTML=`${email?`📧 <strong>${email}</strong><br/>`:''}${phone?`📱 <strong>${phone}</strong><br/>`:''}${insta?`📸 <a href="${insta}" target="_blank">${insta}</a>`:''}`||'No contact info available.';
+  box.classList.add('show');
+  btn.textContent='🙈 Hide Contact';
+}
+
+function sortBy(by){
+  let s=[...allMatches];
+  if(by==='score') s.sort((a,b)=>b.score-a.score);
+  else if(by==='budget') s.sort((a,b)=>budgetIdx(a.budget)-budgetIdx(b.budget));
+  renderMatches(s);
+}
+
+function applyFilter(f,btn){
+  document.querySelectorAll('.fpill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  let filtered=[...allMatches];
+  if(f==='90+') filtered=filtered.filter(m=>m.score>=90);
+  else if(f==='70+') filtered=filtered.filter(m=>m.score>=70);
+  else if(f==='female') filtered=filtered.filter(m=>m.gender==='Female'||m.isGhost);
+  else if(f==='male') filtered=filtered.filter(m=>m.gender==='Male'||m.isGhost);
+  renderMatches(filtered);
+}
+
+document.getElementById('searchEmail').addEventListener('keydown',e=>{if(e.key==='Enter')runSearch()});
+</script>
+</body>
+</html>
