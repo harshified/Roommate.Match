@@ -1,0 +1,271 @@
+<!-- ✦ Designed & Built by Harshjot ❤️ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RoomieMATCH · MBA 2026–2028</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💜</text></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet"/>
+<style>
+/* ── RESET & TOKENS ─────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --plum:#1E0030;
+  --purple:#4A1070;
+  --lavender:#B57BEE;
+  --soft-lav:#D4AAFF;
+  --blush:#FF8FAB;
+  --pink:#FF4D8D;
+  --rose:#FF1F71;
+  --cream:#FFF5F9;
+  --glass:rgba(255,255,255,0.08);
+  --glass-b:rgba(255,255,255,0.18);
+  --glow-pink:0 8px 32px rgba(255,77,141,0.35);
+  --glow-lav:0 8px 32px rgba(181,123,238,0.3);
+  --ff-head:'Playfair Display',Georgia,serif;
+  --ff-body:'DM Sans',system-ui,sans-serif;
+  --ff-script:'Dancing Script',cursive;
+}
+body{font-family:var(--ff-body);background:var(--plum);color:#fff;min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--plum)}
+::-webkit-scrollbar-thumb{background:var(--lavender);border-radius:3px}
+
+/* ── BACKGROUND ─────────────────────────────────────────────────────── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:-1;
+  background:
+    radial-gradient(ellipse 70% 60% at 10% 0%,rgba(255,77,141,0.22) 0%,transparent 55%),
+    radial-gradient(ellipse 60% 70% at 92% 15%,rgba(181,123,238,0.28) 0%,transparent 55%),
+    radial-gradient(ellipse 80% 50% at 50% 110%,rgba(74,16,112,0.5) 0%,transparent 60%),
+    var(--plum);
+}
+
+/* ── NAV ─────────────────────────────────────────────────────────────── */
+nav{
+  position:sticky;top:0;z-index:200;
+  height:66px;padding:0 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(30,0,48,0.8);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--glass-b);
+}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.logo-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--pink),var(--lavender));display:grid;place-items:center;font-size:17px;box-shadow:var(--glow-pink)}
+.logo-text{font-family:var(--ff-script);font-size:1.45rem;background:linear-gradient(90deg,var(--soft-lav),var(--blush));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.logo-sub{display:block;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--lavender);-webkit-text-fill-color:var(--lavender)}
+.nav-links{display:flex;gap:2px;list-style:none}
+.nav-links a{color:rgba(255,255,255,0.7);text-decoration:none;padding:7px 14px;border-radius:40px;font-size:0.84rem;font-weight:500;transition:all .22s;display:flex;align-items:center;gap:5px;border:1px solid transparent}
+.nav-links a:hover,.nav-links a.active{background:var(--glass);border-color:var(--glass-b);color:#fff}
+.nav-links a.active{background:linear-gradient(135deg,rgba(255,77,141,0.25),rgba(181,123,238,0.25));color:var(--blush)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:5px}
+.hamburger span{display:block;width:22px;height:2px;background:var(--soft-lav);border-radius:2px;transition:all .3s}
+
+/* ── HERO ────────────────────────────────────────────────────────────── */
+.hero{
+  min-height:calc(100vh - 66px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:3rem 1.5rem;text-align:center;
+}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,77,141,0.12);border:1px solid rgba(255,77,141,0.3);
+  border-radius:50px;padding:7px 18px;
+  font-size:0.78rem;font-weight:600;color:var(--blush);
+  letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1.5rem;
+  animation:fadeUp .6s ease both;
+}
+.hero h1{
+  font-family:var(--ff-head);font-size:clamp(2.6rem,7vw,5rem);
+  font-weight:900;line-height:1.05;margin-bottom:1.4rem;
+  animation:fadeUp .6s .1s ease both;
+}
+.grad-text{
+  font-style:italic;
+  background:linear-gradient(100deg,var(--blush) 0%,var(--soft-lav) 50%,var(--blush) 100%);
+  background-size:200%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:shimText 3s linear infinite;
+}
+@keyframes shimText{from{background-position:0%}to{background-position:200%}}
+.hero-sub{font-size:1.05rem;color:rgba(255,255,255,0.58);max-width:500px;line-height:1.75;margin-bottom:2.5rem;animation:fadeUp .6s .2s ease both}
+.hero-cta{display:flex;gap:.9rem;flex-wrap:wrap;justify-content:center;animation:fadeUp .6s .3s ease both}
+.stats-strip{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;margin-top:3.5rem;animation:fadeUp .6s .4s ease both}
+.stat-pill{display:inline-flex;align-items:center;gap:8px;background:var(--glass);border:1px solid var(--glass-b);border-radius:50px;padding:9px 18px;font-size:.82rem}
+.stat-pill strong{color:var(--blush);font-size:1rem}
+
+/* ── BUTTONS ─────────────────────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:13px 26px;border-radius:50px;font-family:var(--ff-body);font-weight:600;font-size:.9rem;cursor:pointer;border:none;text-decoration:none;transition:all .28s;position:relative;overflow:hidden;white-space:nowrap}
+.btn-primary{background:linear-gradient(135deg,var(--pink),var(--rose));color:#fff;box-shadow:var(--glow-pink)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(255,31,113,.45)}
+.btn-secondary{background:linear-gradient(135deg,var(--purple),var(--lavender));color:#fff;box-shadow:var(--glow-lav)}
+.btn-secondary:hover{transform:translateY(-2px)}
+.btn-outline{background:transparent;color:var(--soft-lav);border:1.5px solid var(--lavender)}
+.btn-outline:hover{background:var(--glass);color:#fff}
+.btn-sm{padding:9px 18px;font-size:.82rem}
+.btn-lg{padding:16px 38px;font-size:1rem}
+.btn-full{width:100%;justify-content:center}
+
+/* ── CARDS ───────────────────────────────────────────────────────────── */
+.glass-card{background:var(--glass);border:1px solid var(--glass-b);border-radius:22px;backdrop-filter:blur(14px);transition:transform .3s,box-shadow .3s}
+.glass-card:hover{transform:translateY(-5px);box-shadow:var(--glow-lav)}
+
+/* ── SECTIONS ────────────────────────────────────────────────────────── */
+.section{padding:5rem 1.5rem}
+.container{max-width:960px;margin:0 auto}
+.container-lg{max-width:1180px;margin:0 auto}
+.section-head{text-align:center;margin-bottom:3rem}
+.section-head h2{font-family:var(--ff-head);font-size:clamp(1.7rem,4vw,2.6rem);font-weight:900;margin-bottom:.6rem}
+.section-head p{color:rgba(255,255,255,0.55);max-width:480px;margin:0 auto;line-height:1.7;font-size:.95rem}
+
+/* ── FEATURES ────────────────────────────────────────────────────────── */
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem}
+.feat-card{background:var(--glass);border:1px solid var(--glass-b);border-radius:22px;padding:1.75rem;transition:all .32s;cursor:default}
+.feat-card:hover{transform:translateY(-6px);border-color:rgba(181,123,238,.5);box-shadow:var(--glow-lav)}
+.feat-icon{width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,rgba(255,77,141,.2),rgba(181,123,238,.2));display:grid;place-items:center;font-size:1.4rem;margin-bottom:1.1rem;border:1px solid rgba(255,255,255,.12)}
+.feat-card h3{font-family:var(--ff-head);font-size:1.05rem;margin-bottom:.45rem}
+.feat-card p{font-size:.83rem;color:rgba(255,255,255,.58);line-height:1.65}
+
+/* ── HOW IT WORKS ────────────────────────────────────────────────────── */
+.steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:1.25rem;counter-reset:step}
+.step-card{background:var(--glass);border:1px solid var(--glass-b);border-radius:20px;padding:2rem 1.5rem;text-align:center;counter-increment:step;position:relative}
+.step-card::before{content:counter(step);position:absolute;top:-13px;left:50%;transform:translateX(-50%);width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--lavender));font-size:.78rem;font-weight:700;display:grid;place-items:center}
+.step-emoji{font-size:1.9rem;margin-bottom:.9rem;display:block}
+.step-card h4{font-weight:700;margin-bottom:.45rem;font-size:.95rem}
+.step-card p{font-size:.8rem;color:rgba(255,255,255,.5);line-height:1.6}
+
+/* ── CTA BOX ─────────────────────────────────────────────────────────── */
+.cta-box{background:linear-gradient(135deg,rgba(255,77,141,.12),rgba(181,123,238,.12));border:1px solid rgba(181,123,238,.3);border-radius:28px;padding:4rem 2rem;max-width:640px;margin:0 auto;text-align:center}
+.cta-box h2{font-family:var(--ff-head);font-size:clamp(1.5rem,4vw,2.3rem);margin-bottom:.8rem}
+.cta-box p{color:rgba(255,255,255,.58);margin-bottom:2rem;line-height:1.7}
+
+/* ── FOOTER ──────────────────────────────────────────────────────────── */
+footer{text-align:center;padding:1.75rem 1.5rem;border-top:1px solid rgba(255,255,255,.07);font-size:.78rem;color:rgba(255,255,255,.3)}
+footer a{color:var(--lavender);text-decoration:none}
+
+/* ── ANIMATIONS ──────────────────────────────────────────────────────── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.fadeup{opacity:0;animation:fadeUp .65s ease forwards}
+.d1{animation-delay:.1s}.d2{animation-delay:.2s}.d3{animation-delay:.3s}
+
+/* ── WATERMARK ───────────────────────────────────────────────────────── */
+.wm{position:fixed;bottom:10px;right:14px;color:transparent;font-size:.65rem;user-select:text;pointer-events:none;z-index:9999;letter-spacing:.5px}
+
+/* ── RESPONSIVE ──────────────────────────────────────────────────────── */
+@media(max-width:700px){
+  .hamburger{display:flex}
+  .nav-links{display:none;position:fixed;top:66px;left:0;right:0;background:rgba(20,0,35,.97);backdrop-filter:blur(20px);flex-direction:column;padding:1.25rem;border-bottom:1px solid var(--glass-b);gap:3px}
+  .nav-links.open{display:flex}
+  .nav-links a{border-radius:12px;padding:11px 14px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a class="nav-logo" href="./index.html">
+    <div class="logo-icon">💜</div>
+    <div>
+      <span class="logo-text">RoomieMATCH</span>
+      <span class="logo-sub">MBA 2026–2028</span>
+    </div>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="./index.html" class="active">🏠 Home</a></li>
+    <li><a href="./form.html">📋 Join</a></li>
+    <li><a href="./matches.html">💞 Matches</a></li>
+    <li><a href="./updates.html">📢 Updates</a></li>
+    <li><a href="./admin.html">🔐 Admin</a></li>
+  </ul>
+  <button class="hamburger" id="ham" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="eyebrow">✨ SDA IMB Batch 2026–2028 &nbsp;·&nbsp; Roommate Matching</div>
+  <h1>Find Your<br/><span class="grad-text">Perfect Roomie</span><br/>Match.</h1>
+  <p class="hero-sub">Stop scrolling through chaotic group chats. Fill your profile, let our smart algorithm match you with compatible flatmates — vibes, budget, habits & all.</p>
+  <div class="hero-cta">
+    <a href="./form.html" class="btn btn-primary btn-lg">✍️ Fill Your Profile</a>
+    <a href="./matches.html" class="btn btn-outline btn-lg">💞 See Matches</a>
+  </div>
+  <div class="stats-strip">
+    <div class="stat-pill">🎓 <strong>MBA</strong> 2026–2028</div>
+    <div class="stat-pill">🔢 <strong>10</strong> Match Dimensions</div>
+    <div class="stat-pill">💯 <strong>Smart</strong> Compatibility</div>
+    <div class="stat-pill">🔒 <strong>Private</strong> & Secure</div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow" style="display:inline-flex;margin-bottom:1rem">✨ What we offer</div>
+      <h2>Everything in one <span class="grad-text">beautiful</span> place</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card fadeup d1"><div class="feat-icon">📋</div><h3>Detailed Profile</h3><p>Share your lifestyle, preferences, budget & habits — everything that matters for peaceful flat life.</p></div>
+      <div class="feat-card fadeup d2"><div class="feat-icon">💞</div><h3>Smart Matching</h3><p>10-dimension compatibility algorithm scores you against every registered MBA student. Real results, not random.</p></div>
+      <div class="feat-card fadeup d3"><div class="feat-icon">📢</div><h3>Updates Hub</h3><p>Groups forming, meetups, flat openings — all in one clean feed, no WhatsApp chaos.</p></div>
+      <div class="feat-card fadeup d1"><div class="feat-icon">🔐</div><h3>Private & Safe</h3><p>Your data stays safe. Contact is only shared with your consent. No spam, no public leaks.</p></div>
+      <div class="feat-card fadeup d2"><div class="feat-icon">📧</div><h3>Email Results</h3><p>When matches are finalised, get a beautiful email directly — no manual chasing required.</p></div>
+      <div class="feat-card fadeup d3"><div class="feat-icon">👩‍💼</div><h3>Coordinator Panel</h3><p>Admin dashboard to manage profiles, run matching, post updates and keep everything organised.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow" style="display:inline-flex;margin-bottom:1rem">🗺️ Your journey</div>
+      <h2>4 steps to your <span class="grad-text">dream flat</span></h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card"><span class="step-emoji">📝</span><h4>Fill Profile</h4><p>Complete the detailed form about your lifestyle, preferences & accommodation needs.</p></div>
+      <div class="step-card"><span class="step-emoji">⏳</span><h4>Wait for Matches</h4><p>Our coordinator runs the matching engine after the submission window closes.</p></div>
+      <div class="step-card"><span class="step-emoji">💌</span><h4>Get Email</h4><p>Receive a personalised email with your top compatible matches and contact info.</p></div>
+      <div class="step-card"><span class="step-emoji">🏠</span><h4>Move In!</h4><p>Connect with your matches, visit flats together, sign the lease and move in.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="cta-box">
+      <div style="font-size:3rem;margin-bottom:1rem">💜</div>
+      <h2>Ready to find your<br/>roomie soulmate?</h2>
+      <p>Join your batch, fill your profile and let the magic happen. Takes less than 10 minutes.</p>
+      <a href="./form.html" class="btn btn-primary btn-lg">Get Started ✨</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Made with 💜 for MBA Batch 2026–2028 &nbsp;·&nbsp; <a href="./admin.html">Coordinator Login</a> <span style="opacity:0;font-size:0.6rem;transition:opacity 0.4s" onmouseover="this.style.opacity='0.25'" onmouseout="this.style.opacity='0'">  Harshjot 🌟 </span> </p>
+</footer>
+
+<div class="wm">Built by Harshjot ❤️ · RoomieMATCH · MBA 2026-2028</div>
+
+<script>
+// Hamburger
+document.getElementById('ham').addEventListener('click',function(){
+  document.getElementById('navLinks').classList.toggle('open');
+});
+
+// Scroll-triggered fade
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';obs.unobserve(e.target)}});
+},{threshold:0.15});
+document.querySelectorAll('.fadeup').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
