@@ -291,42 +291,81 @@ function computeScore(a,b){
   return Math.round(Math.min(t,100));
 }
 
-async function runSearch(){
-  const email=document.getElementById('searchEmail').value.trim();
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){toast('Please enter a valid email address','err');return;}
+// FIXED runSearch function
+async function runSearch() {
+  const emailInput = document.getElementById('searchEmail');
+  const email = (emailInput ? emailInput.value : '').trim();
 
-  document.getElementById('resultsArea').style.display='none';
-  document.getElementById('emptyState').style.display='none';
-  document.getElementById('loadingState').style.display='block';
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    toast('Please enter a valid email address', 'err');
+    return;
+  }
+
+  // Show loading
+  document.getElementById('resultsArea').style.display = 'none';
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('loadingState').style.display = 'block';
   showLoader();
 
-  try{
-    const url=new URL(APPS_SCRIPT_URL);
-    url.searchParams.set('action','getMatches');
-    url.searchParams.set('email',email);
-    const res=await fetch(url.toString());
-    const json=await res.json();
-    hideLoader();
-    document.getElementById('loadingState').style.display='none';
+  try {
+    const url = new URL(APPS_SCRIPT_URL);
+    url.searchParams.set('action', 'getMatches');
+    url.searchParams.set('email', email);
 
-    if(!json||json.error){
-      document.getElementById('emptyState').style.display='block';
-      document.getElementById('emptyTitle').textContent=json?.error||'Email not found';
-      document.getElementById('emptyMsg').textContent="Make sure you've filled the form with this exact email.";
+    const res = await fetch(url.toString());
+    const text = await res.text();
+    
+    let json;
+    try {
+      json = JSON.parse(text);
+    } catch (e) {
+      throw new Error('Server returned invalid data');
+    }
+
+    hideLoader();
+    document.getElementById('loadingState').style.display = 'none';
+
+    if (json.error) {
+      document.getElementById('emptyState').style.display = 'block';
+      document.getElementById('emptyTitle').textContent = 'Not Found';
+      document.getElementById('emptyMsg').textContent = json.error;
       return;
     }
 
-    myProfile=json.profile;
-    const others=(json.others||[]).filter(p=>(p.email||'').toLowerCase()!==email.toLowerCase());
-    allMatches=[{...GHOST},...others.map(p=>({...p,score:computeScore(myProfile,p)})).sort((a,b)=>b.score-a.score)];
+    if (!json.profile) {
+      document.getElementById('emptyState').style.display = 'block';
+      document.getElementById('emptyTitle').textContent = 'Profile Not Found';
+      document.getElementById('emptyMsg').textContent = 'No profile found with this email.';
+      return;
+    }
+
+    myProfile = json.profile;
+    const others = (json.others || []).filter(function(p) {
+      return (p.email || '').toString().trim().toLowerCase() !== email.toLowerCase();
+    });
+
+    allMatches = [{...GHOST}].concat(
+      others.map(function(p) {
+        return {
+          ...p,
+          score: computeScore(myProfile, p)
+        };
+      }).sort(function(a, b) {
+        return b.score - a.score;
+      })
+    );
+
     renderMatches(allMatches);
-  }catch(err){
+
+  } catch (err) {
     hideLoader();
-    document.getElementById('loadingState').style.display='none';
-    document.getElementById('emptyState').style.display='block';
-    document.getElementById('emptyTitle').textContent='Could not load matches';
-    document.getElementById('emptyMsg').textContent='The data may not be live yet. Check the Updates page or ask the coordinator!';
-    console.error(err);
+    document.getElementById('loadingState').style.display = 'none';
+    console.error('Match search error:', err);
+    
+    document.getElementById('emptyState').style.display = 'block';
+    document.getElementById('emptyTitle').textContent = 'Error';
+    document.getElementById('emptyMsg').textContent = 'Could not load matches. Please try again later.';
+    toast('Failed to load matches', 'err');
   }
 }
 
