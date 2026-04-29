@@ -252,8 +252,10 @@ const GHOST = {
 let allMatches = [];
 let myProfile = null;
 
-// Nav
-document.getElementById('ham').addEventListener('click',()=>document.getElementById('navLinks').classList.toggle('open'));
+// Loader
+const loader = document.getElementById('loader');
+function showLoader() { if (loader) loader.classList.add('show'); }
+function hideLoader() { if (loader) loader.classList.remove('show'); }
 
 // Toast
 function toast(msg, type = 'info') {
@@ -265,48 +267,59 @@ function toast(msg, type = 'info') {
   setTimeout(() => el.remove(), 4500);
 }
 
-// Loader
-const loader = document.getElementById('loader');
-function showLoader() { if (loader) loader.classList.add('show'); }
-function hideLoader() { if (loader) loader.classList.remove('show'); }
-
 // Hamburger
 document.getElementById('ham').addEventListener('click', () => {
   document.getElementById('navLinks').classList.toggle('open');
 });
 
-// Matching engine
-function computeScore(a,b){
-  let t=0;
-  const W={gender:8,lifestyle:15,budget:15,accommodation:10,food:12,smoking:10,alcohol:8,habits:8,duration:8,vibe:6};
-  if(a.gender===b.gender) t+=W.gender;
-  const bd=Math.abs(budgetIdx(a.budget)-budgetIdx(b.budget));
-  t+=bd===0?W.budget:bd===1?W.budget*.5:0;
-  if(a.smoking===b.smoking) t+=W.smoking;
-  else if(a.nashe_okay==='Yes'||b.nashe_okay==='Yes') t+=W.smoking*.3;
-  const nd="Don't Drink";
-  if(a.alcohol===b.alcohol) t+=W.alcohol;
-  else if(a.alcohol!==nd&&b.alcohol!==nd) t+=W.alcohol*.5;
-  if(a.food===b.food) t+=W.food;
-  else if(a.food==='Flexible'||b.food==='Flexible') t+=W.food*.8;
-  else if(['Non-vegetarian','Eggetarian'].includes(a.food)&&['Non-vegetarian','Eggetarian'].includes(b.food)) t+=W.food*.5;
-  const n=v=>parseInt(v)||3;
-  const sl=1-Math.abs(n(a.sleep_time)-n(b.sleep_time))/4;
-  const cl=1-Math.abs(n(a.cleanliness)-n(b.cleanliness))/4;
-  const ns=1-Math.abs(n(a.noise_tolerance)-n(b.noise_tolerance))/4;
-  t+=W.lifestyle*Math.max(0,(sl+cl+ns)/3);
-  if(a.accommodation===b.accommodation) t+=W.accommodation;
-  else if(a.accommodation==='Open to anything'||b.accommodation==='Open to anything') t+=W.accommodation*.8;
-  if(a.duration===b.duration) t+=W.duration; else t+=W.duration*.3;
-  if(a.cook_freq===b.cook_freq) t+=W.habits*.5;
-  if(a.kitchen_use===b.kitchen_use) t+=W.habits*.5;
-  const h1=(a.hobbies||'').toLowerCase().split(/,|;/).map(s=>s.trim()).filter(Boolean);
-  const h2=(b.hobbies||'').toLowerCase().split(/,|;/).map(s=>s.trim()).filter(Boolean);
-  const ov=h1.filter(h=>h2.some(hb=>hb.includes(h)||h.includes(hb)));
-  if(ov.length) t+=Math.min(W.vibe,ov.length*2);
-  return Math.round(Math.min(t,100));
-}
+// Compute Score
+function computeScore(a, b) {
+  var W = {gender:8, lifestyle:15, budget:15, accommodation:10, food:12, smoking:10, alcohol:8, habits:8, duration:8, vibe:6};
+  var total = 0;
+  var gM = a.gender === b.gender;
+  var fM = a.food === b.food;
+  if (gM) total += W.gender;
 
+  var bMap = {'Less than 20k':0, '20-30k':1, '30-40k':2, '40-50k':3, 'More than 50k':4};
+  var bd = Math.abs((bMap[a.budget] || 2) - (bMap[b.budget] || 2));
+  if (bd === 0) total += W.budget;
+  else if (bd === 1) total += W.budget * 0.5;
+
+  if (a.smoking === b.smoking) total += W.smoking;
+  else if (a.nashe_okay === 'Yes' || b.nashe_okay === 'Yes') total += W.smoking * 0.3;
+
+  var nd = "Don't Drink";
+  if (a.alcohol === b.alcohol) total += W.alcohol;
+  else if (a.alcohol !== nd && b.alcohol !== nd) total += W.alcohol * 0.5;
+
+  if (a.food === b.food) total += W.food;
+  else if (a.food === 'Flexible' || b.food === 'Flexible') total += W.food * 0.8;
+  else if (['Non-vegetarian','Eggetarian'].indexOf(a.food) >= 0 && ['Non-vegetarian','Eggetarian'].indexOf(b.food) >= 0) total += W.food * 0.5;
+
+  var n = function(v) { return parseInt(v) || 3; };
+  var ls = Math.max(0, (
+    (1 - Math.abs(n(a.sleep_time) - n(b.sleep_time)) / 4) +
+    (1 - Math.abs(n(a.cleanliness) - n(b.cleanliness)) / 4) +
+    (1 - Math.abs(n(a.noise_tolerance) - n(b.noise_tolerance)) / 4)
+  ) / 3);
+  total += W.lifestyle * ls;
+
+  if (a.accommodation === b.accommodation) total += W.accommodation;
+  else if (a.accommodation === 'Open to anything' || b.accommodation === 'Open to anything') total += W.accommodation * 0.8;
+
+  if (a.duration === b.duration) total += W.duration;
+  else total += W.duration * 0.3;
+
+  if (a.cook_freq === b.cook_freq) total += W.habits * 0.5;
+  if (a.kitchen_use === b.kitchen_use) total += W.habits * 0.5;
+
+  var h1 = (a.hobbies || '').toLowerCase().split(/,|;/).map(s => s.trim()).filter(Boolean);
+  var h2 = (b.hobbies || '').toLowerCase().split(/,|;/).map(s => s.trim()).filter(Boolean);
+  var ov = h1.filter(h => h2.some(hb => hb.indexOf(h) >= 0 || h.indexOf(hb) >= 0));
+  if (ov.length) total += Math.min(W.vibe, ov.length * 2);
+
+  return Math.round(Math.min(total, 100));
+}
 
 // Main Search Function
 async function runSearch() {
@@ -391,23 +404,8 @@ function renderMatches(matches) {
     return;
   }
 
-    grid.innerHTML=matches.map((m,i)=>{
-    const score=m.score||0;
-    const clr=score>=85?'#4ade80':score>=65?'var(--blush)':'var(--lavender)';
-    const initials=(m.name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    const canShare=m.share_contact!=='No';
-    const circ=2*Math.PI*28;
-    const dash=circ*(score/100);
-
-    const dims=[
-      {label:'Lifestyle',val:Math.min(100,Math.round(score*.9+Math.random()*10))},
-      {label:'Budget',val:m.budget===myProfile?.budget?100:60},
-      {label:'Food',val:m.food===myProfile?.food?100:m.food==='Flexible'?80:50},
-      {label:'Vibes',val:Math.min(100,Math.round(score*.85+Math.random()*15))},
-    ];
-
   let html = '';
-      
+
   matches.forEach(function(m, i) {
     const score = parseInt(m.score) || 0;
     const clr = score >= 85 ? '#4ade80' : score >= 65 ? 'var(--blush)' : 'var(--lavender)';
@@ -440,9 +438,11 @@ function renderMatches(matches) {
             <span class="compat-pct" style="color:${clr}">${score}%</span>
           </div>
           
-        ${canShare&&!m.isGhost?`<button class="btn btn-outline btn-sm reveal-btn" onclick="toggleContact(this,'${m.email||''}','${m.phone||''}','${m.instagram||''}')">📱 View Contact</button>`:''}
-        ${m.isGhost?`<p style="font-size:.78rem;color:rgba(255,255,255,.35);margin-top:8px">✨ Matchmaker's profile — Not a roommate, just the architect of your peace.</p>`:''}
-        ${!canShare&&!m.isGhost?`<p style="font-size:.78rem;color:rgba(255,255,255,.35);margin-top:8px">🔒 This person prefers to keep contact private.</p>`:''}
+          ${canShare ? 
+            `<button class="btn btn-outline btn-sm reveal-btn" onclick="toggleContact(this,'${(m.email||'').replace(/'/g,"\\'")}','${(m.phone||'').replace(/'/g,"\\'")}','${(m.instagram||'').replace(/'/g,"\\'")}')">📱 View Contact</button>` : 
+            `<p style="font-size:.78rem;color:rgba(255,255,255,.35);margin-top:8px">🔒 Contact private</p>`}
+          
+          ${m.isGhost ? `<p style="font-size:.78rem;color:rgba(255,255,255,.35);margin-top:8px">✨ Matchmaker's profile — Not a roommate, just the architect of your peace.</p>` : ''}
           
           <div class="contact-box"></div>
         </div>
@@ -455,23 +455,7 @@ function renderMatches(matches) {
   grid.innerHTML = html;
 }
 
-function toggleContact(btn, email, phone, insta) {
-  const box = btn.nextElementSibling;
-  if (box.classList.contains('show')) {
-    box.classList.remove('show');
-    btn.textContent = '📱 View Contact';
-    return;
-  }
-  let content = '';
-  if (email) content += `📧 <strong>${email}</strong><br/>`;
-  if (phone) content += `📱 <strong>${phone}</strong><br/>`;
-  if (insta) content += `📸 <a href="${insta}" target="_blank">${insta}</a>`;
-  box.innerHTML = content || 'No contact info available.';
-  box.classList.add('show');
-  btn.textContent = '🙈 Hide Contact';
-}
-
-  // Sort & Filter Functions
+// Sort & Filter Functions
 function sortBy(type) {
   let sorted = [...allMatches];
   if (type === 'score') {
@@ -495,6 +479,22 @@ function applyFilter(filter, btn) {
   else if (filter === 'male') filtered = filtered.filter(m => m.gender === 'Male' || m.isGhost);
 
   renderMatches(filtered);
+}
+
+function toggleContact(btn, email, phone, insta) {
+  const box = btn.nextElementSibling;
+  if (box.classList.contains('show')) {
+    box.classList.remove('show');
+    btn.textContent = '📱 View Contact';
+    return;
+  }
+  let content = '';
+  if (email) content += `📧 <strong>${email}</strong><br/>`;
+  if (phone) content += `📱 <strong>${phone}</strong><br/>`;
+  if (insta) content += `📸 <a href="${insta}" target="_blank">${insta}</a>`;
+  box.innerHTML = content || 'No contact info available.';
+  box.classList.add('show');
+  btn.textContent = '🙈 Hide Contact';
 }
 
 // Enter key support
