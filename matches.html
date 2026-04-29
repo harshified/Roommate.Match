@@ -389,7 +389,7 @@ async function runSearch() {
   }
 }
 
-// Clean & Beautiful Render Matches
+// Clean Render Matches
 function renderMatches(matches) {
   document.getElementById('resultsArea').style.display = 'block';
   document.getElementById('emptyState').style.display = 'none';
@@ -411,7 +411,6 @@ function renderMatches(matches) {
     const clr = score >= 85 ? '#4ade80' : score >= 65 ? 'var(--blush)' : 'var(--lavender)';
     const initials = (m.name || '?').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
 
-    // Avatar
     let avatarHTML = '';
     if (m.photo_url && m.photo_url.trim() !== '') {
       avatarHTML = `<div class="avatar" style="background-image:url('${m.photo_url}');background-size:cover;background-position:center;border:2.5px solid rgba(181,123,238,0.6);"></div>`;
@@ -433,17 +432,17 @@ function renderMatches(matches) {
             ${m.gender ? `<span class="tag tag-lav">${m.gender}</span>` : ''}
             ${m.budget ? `<span class="tag tag-pink">💰 ${m.budget}</span>` : ''}
             ${m.food ? `<span class="tag tag-green">${m.food}</span>` : ''}
-            ${m.accommodation ? `<span class="tag tag-lav">🏠 ${m.accommodation}</span>` : ''}
           </div>
           <div class="compat-row">
             <div class="compat-track"><div class="compat-fill" style="width:${score}%"></div></div>
             <span class="compat-pct" style="color:${clr}">${score}%</span>
           </div>
-
-         ${canShare&&!m.isGhost?`<button class="btn btn-outline btn-sm reveal-btn" onclick="toggleContact(this,'${(m.email||'').replace(/'/g,"\\'")}','${(m.phone||'').replace(/'/g,"\\'")}','${(m.instagram||'').replace(/'/g,"\\'")}')">📱 View Contact</button>`:''}
-         ${m.isGhost?`<p style="font-size:.78rem;color:rgba(255,255,255,.35);margin-top:8px">✨ Matchmaker's profile — Not a roommate, just the architect of your peace.</p>`:''}
-         ${!canShare&&!m.isGhost?`<p style="font-size:.78rem;color:rgba(255,255,255,.35);margin-top:8px">🔒 This person prefers to keep contact private.</p>`:''}
-
+          
+          ${canShare ? 
+            `<button class="btn btn-outline btn-sm reveal-btn" onclick="toggleContact(this,'${(m.email||'').replace(/'/g,"\\'")}','${(m.phone||'').replace(/'/g,"\\'")}','${(m.instagram||'').replace(/'/g,"\\'")}')">📱 View Contact</button>` : 
+            `<p style="font-size:.78rem;color:rgba(255,255,255,.35);margin-top:8px">🔒 Contact private</p>`}
+          
+          ${m.isGhost ? `<p style="font-size:.78rem;color:rgba(255,255,255,.35);margin-top:8px">✨ Matchmaker's profile — Not a roommate, just the architect of your peace.</p>` : ''}
           
           <div class="contact-box"></div>
         </div>
@@ -454,6 +453,32 @@ function renderMatches(matches) {
   });
 
   grid.innerHTML = html;
+}
+
+// Sort & Filter Functions
+function sortBy(type) {
+  let sorted = [...allMatches];
+  if (type === 'score') {
+    sorted.sort((a, b) => b.score - a.score);
+  } else if (type === 'budget') {
+    const bMap = {'Less than 20k':0, '20-30k':1, '30-40k':2, '40-50k':3, 'More than 50k':4};
+    sorted.sort((a, b) => (bMap[a.budget] || 2) - (bMap[b.budget] || 2));
+  }
+  renderMatches(sorted);
+}
+
+function applyFilter(filter, btn) {
+  document.querySelectorAll('.fpill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  let filtered = [...allMatches];
+
+  if (filter === '90+') filtered = filtered.filter(m => m.score >= 90);
+  else if (filter === '70+') filtered = filtered.filter(m => m.score >= 70);
+  else if (filter === 'female') filtered = filtered.filter(m => m.gender === 'Female' || m.isGhost);
+  else if (filter === 'male') filtered = filtered.filter(m => m.gender === 'Male' || m.isGhost);
+
+  renderMatches(filtered);
 }
 
 function toggleContact(btn, email, phone, insta) {
