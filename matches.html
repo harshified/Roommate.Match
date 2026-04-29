@@ -419,7 +419,8 @@ function renderMatches(matches) {
       {label:'Vibes',val:Math.min(100,Math.round(score*.85+Math.random()*15))},
     ];
 
-
+  let html = '';
+      
   matches.forEach(function(m, i) {
     const score = parseInt(m.score) || 0;
     const clr = score >= 85 ? '#4ade80' : score >= 65 ? 'var(--blush)' : 'var(--lavender)';
