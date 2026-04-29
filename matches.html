@@ -402,6 +402,7 @@ async function runSearch() {
 
 // Render Matches
 // FIXED renderMatches function
+// FIXED renderMatches - Complete & Clean Version
 function renderMatches(matches) {
   document.getElementById('resultsArea').style.display = 'block';
   document.getElementById('emptyState').style.display = 'none';
@@ -410,28 +411,31 @@ function renderMatches(matches) {
   document.getElementById('resCount').textContent = 'Showing ' + matches.length + ' compatible roommates';
 
   const grid = document.getElementById('matchGrid');
+  
   if (!matches || matches.length === 0) {
     grid.innerHTML = '<p style="color:rgba(255,255,255,.45);text-align:center;padding:3rem">No matches found.</p>';
     return;
   }
 
-  grid.innerHTML = matches.map(function(m, i) {
+  let html = '';
+
+  matches.forEach(function(m, i) {
     const score = parseInt(m.score) || 0;
     const clr = score >= 85 ? '#4ade80' : score >= 65 ? 'var(--blush)' : 'var(--lavender)';
-    const initials = (m.name || '?').split(' ').map(function(w) { return w[0]; }).join('').slice(0, 2).toUpperCase();
+    const initials = (m.name || '?').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
 
-    // Safe avatar
+    // Avatar
     let avatarHTML = '';
     if (m.photo_url && m.photo_url.trim() !== '') {
-      avatarHTML = `<div class="avatar" style="background-image:url('${m.photo_url}'); background-size:cover; background-position:center; border:2.5px solid rgba(181,123,238,0.6);"></div>`;
+      avatarHTML = `<div class="avatar" style="background-image:url('${m.photo_url}');background-size:cover;background-position:center;border:2.5px solid rgba(181,123,238,0.6);"></div>`;
     } else {
       avatarHTML = `<div class="avatar${m.isGhost ? ' ghost' : ''}">${m.isGhost ? '⭐' : initials}</div>`;
     }
 
-    // Safe contact check
-    const canShare = m.share_contact !== 'No' && !m.isGhost;
+    // Contact button logic
+    const canShare = (m.share_contact !== 'No') && !m.isGhost;
 
-    return `
+    html += `
       <div class="match-card" style="animation-delay:${i * 0.06}s" data-score="${score}" data-gender="${m.gender || ''}">
         ${avatarHTML}
         <div>
@@ -459,14 +463,16 @@ function renderMatches(matches) {
           <div class="score-num"><span style="color:${clr}">${score}</span><small>%</small></div>
         </div>
       </div>`;
-  }).join('');
+  });
 
-  // Animate progress bars
-  setTimeout(function() {
-    document.querySelectorAll('.compat-fill').forEach(function(el) {
-      el.style.width = (el.parentElement.style.width || '0%');
+  grid.innerHTML = html;
+
+  // Animate bars
+  setTimeout(() => {
+    document.querySelectorAll('.compat-fill').forEach(el => {
+      if (el.parentElement) el.style.width = '100%';
     });
-  }, 150);
+  }, 100);
 }
 
 function toggleContact(btn, email, phone, insta) {
