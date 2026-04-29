@@ -230,7 +230,7 @@ const GHOST_EMAIL     = 'roommatematch@gmail.com';
 
 const GHOST = {
   name: 'Nims ✨',
-  email: GHOST_EMAIL,
+  email: 'roommatematch@gmail.com',
   gender: '✨',
   budget: 'Any',
   food: 'Flexible',
@@ -254,12 +254,8 @@ let myProfile = null;
 
 // Loader
 const loader = document.getElementById('loader');
-function showLoader() { 
-  if (loader) loader.classList.add('show'); 
-}
-function hideLoader() { 
-  if (loader) loader.classList.remove('show'); 
-}
+function showLoader() { if (loader) loader.classList.add('show'); }
+function hideLoader() { if (loader) loader.classList.remove('show'); }
 
 // Toast
 function toast(msg, type = 'info') {
@@ -282,7 +278,6 @@ function computeScore(a, b) {
   var total = 0;
   var gM = a.gender === b.gender;
   var fM = a.food === b.food;
-
   if (gM) total += W.gender;
 
   var bMap = {'Less than 20k':0, '20-30k':1, '30-40k':2, '40-50k':3, 'More than 50k':4};
@@ -326,10 +321,10 @@ function computeScore(a, b) {
   return Math.round(Math.min(total, 100));
 }
 
-// Main Search Function - FIXED
+// Main Search Function
 async function runSearch() {
   const emailInput = document.getElementById('searchEmail');
-  const email = (emailInput ? emailInput.value : '').trim();
+  const email = (emailInput ? emailInput.value : '').trim().toLowerCase();
 
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     toast('Please enter a valid email address', 'err');
@@ -348,13 +343,7 @@ async function runSearch() {
 
     const res = await fetch(url.toString());
     const text = await res.text();
-    let json;
-
-    try {
-      json = JSON.parse(text);
-    } catch (e) {
-      throw new Error('Invalid response from server');
-    }
+    let json = JSON.parse(text);
 
     hideLoader();
     document.getElementById('loadingState').style.display = 'none';
@@ -374,11 +363,12 @@ async function runSearch() {
     }
 
     myProfile = json.profile;
+
     const others = (json.others || []).filter(function(p) {
-      return (p.email || '').toString().trim().toLowerCase() !== email.toLowerCase();
+      return (p.email || '').toString().trim().toLowerCase() !== email;
     });
 
-    allMatches = [{ ...GHOST }].concat(
+    allMatches = [GHOST].concat(
       others.map(function(p) {
         return { ...p, score: computeScore(myProfile, p) };
       }).sort(function(a, b) {
@@ -392,7 +382,6 @@ async function runSearch() {
     hideLoader();
     document.getElementById('loadingState').style.display = 'none';
     console.error('Search Error:', err);
-
     document.getElementById('emptyState').style.display = 'block';
     document.getElementById('emptyTitle').textContent = 'Error';
     document.getElementById('emptyMsg').textContent = 'Could not load matches. Please try again.';
@@ -400,9 +389,7 @@ async function runSearch() {
   }
 }
 
-// Render Matches
-// FIXED renderMatches function
-// FIXED renderMatches - Complete & Clean Version
+// Clean & Beautiful Render Matches
 function renderMatches(matches) {
   document.getElementById('resultsArea').style.display = 'block';
   document.getElementById('emptyState').style.display = 'none';
@@ -432,11 +419,10 @@ function renderMatches(matches) {
       avatarHTML = `<div class="avatar${m.isGhost ? ' ghost' : ''}">${m.isGhost ? '⭐' : initials}</div>`;
     }
 
-    // Contact button logic
     const canShare = (m.share_contact !== 'No') && !m.isGhost;
 
     html += `
-      <div class="match-card" style="animation-delay:${i * 0.06}s" data-score="${score}" data-gender="${m.gender || ''}">
+      <div class="match-card" style="animation-delay:${i * 0.06}s">
         ${avatarHTML}
         <div>
           <div class="match-name">
@@ -447,16 +433,18 @@ function renderMatches(matches) {
             ${m.gender ? `<span class="tag tag-lav">${m.gender}</span>` : ''}
             ${m.budget ? `<span class="tag tag-pink">💰 ${m.budget}</span>` : ''}
             ${m.food ? `<span class="tag tag-green">${m.food}</span>` : ''}
+            ${m.accommodation ? `<span class="tag tag-lav">🏠 ${m.accommodation}</span>` : ''}
           </div>
           <div class="compat-row">
             <div class="compat-track"><div class="compat-fill" style="width:${score}%"></div></div>
             <span class="compat-pct" style="color:${clr}">${score}%</span>
           </div>
-          
-         ${canShare&&!m.isGhost?`<button class="btn btn-outline btn-sm reveal-btn" onclick="toggleContact(this,'${m.email||''}','${m.phone||''}','${m.instagram||''}')">📱 View Contact</button>`:''}
+
+         ${canShare&&!m.isGhost?`<button class="btn btn-outline btn-sm reveal-btn" onclick="toggleContact(this,'${(m.email||'').replace(/'/g,"\\'")}','${(m.phone||'').replace(/'/g,"\\'")}','${(m.instagram||'').replace(/'/g,"\\'")}')">📱 View Contact</button>`:''}
          ${m.isGhost?`<p style="font-size:.78rem;color:rgba(255,255,255,.35);margin-top:8px">✨ Matchmaker's profile — Not a roommate, just the architect of your peace.</p>`:''}
          ${!canShare&&!m.isGhost?`<p style="font-size:.78rem;color:rgba(255,255,255,.35);margin-top:8px">🔒 This person prefers to keep contact private.</p>`:''}
-         
+
+          
           <div class="contact-box"></div>
         </div>
         <div class="score-col">
@@ -466,13 +454,6 @@ function renderMatches(matches) {
   });
 
   grid.innerHTML = html;
-
-  // Animate bars
-  setTimeout(() => {
-    document.querySelectorAll('.compat-fill').forEach(el => {
-      if (el.parentElement) el.style.width = '100%';
-    });
-  }, 100);
 }
 
 function toggleContact(btn, email, phone, insta) {
