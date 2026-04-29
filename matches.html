@@ -404,7 +404,21 @@ function renderMatches(matches) {
     return;
   }
 
-  let html = '';
+    grid.innerHTML=matches.map((m,i)=>{
+    const score=m.score||0;
+    const clr=score>=85?'#4ade80':score>=65?'var(--blush)':'var(--lavender)';
+    const initials=(m.name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    const canShare=m.share_contact!=='No';
+    const circ=2*Math.PI*28;
+    const dash=circ*(score/100);
+
+    const dims=[
+      {label:'Lifestyle',val:Math.min(100,Math.round(score*.9+Math.random()*10))},
+      {label:'Budget',val:m.budget===myProfile?.budget?100:60},
+      {label:'Food',val:m.food===myProfile?.food?100:m.food==='Flexible'?80:50},
+      {label:'Vibes',val:Math.min(100,Math.round(score*.85+Math.random()*15))},
+    ];
+
 
   matches.forEach(function(m, i) {
     const score = parseInt(m.score) || 0;
@@ -438,11 +452,9 @@ function renderMatches(matches) {
             <span class="compat-pct" style="color:${clr}">${score}%</span>
           </div>
           
-          ${canShare ? 
-            `<button class="btn btn-outline btn-sm reveal-btn" onclick="toggleContact(this,'${(m.email||'').replace(/'/g,"\\'")}','${(m.phone||'').replace(/'/g,"\\'")}','${(m.instagram||'').replace(/'/g,"\\'")}')">📱 View Contact</button>` : 
-            `<p style="font-size:.78rem;color:rgba(255,255,255,.35);margin-top:8px">🔒 Contact private</p>`}
-          
-          ${m.isGhost ? `<p style="font-size:.78rem;color:rgba(255,255,255,.35);margin-top:8px">✨ Matchmaker's profile — Not a roommate, just the architect of your peace.</p>` : ''}
+        ${canShare&&!m.isGhost?`<button class="btn btn-outline btn-sm reveal-btn" onclick="toggleContact(this,'${m.email||''}','${m.phone||''}','${m.instagram||''}')">📱 View Contact</button>`:''}
+        ${m.isGhost?`<p style="font-size:.78rem;color:rgba(255,255,255,.35);margin-top:8px">✨ Special system profile — this is a fun easter egg!</p>`:''}
+        ${!canShare&&!m.isGhost?`<p style="font-size:.78rem;color:rgba(255,255,255,.35);margin-top:8px">🔒 This person prefers to keep contact private.</p>`:''}
           
           <div class="contact-box"></div>
         </div>
